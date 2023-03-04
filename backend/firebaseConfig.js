@@ -1,17 +1,14 @@
-// Import the functions you need from the SDKs you need
-import * as firebase from 'firebase';
-import '@firebase/auth';
-import '@firebase/firestore';
-
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { getAuth } from "firebase/auth";
+import {getAuth} from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyC6HRRXalQxN1mmJWYfAIJcpoXMljA0tCg",
   authDomain: "seashellseahell-e06ab.firebaseapp.com",
@@ -24,20 +21,31 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-
-
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
+//continue with firestore data base
+const firestore = getFirestore();
 
-//example (not actual data)
-async function getCities(db) {
-    const citiesCol = collection(db, 'cities');
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map(doc => doc.data());
-    return cityList;
-  }
+/*
+const specialOfTheDay = doc(firestore, 'dailySpecial/2021-09-14');
+function writeDailySpecial(){
+  const docData = {
+    description: 'A delicious vanilla latte',
+    price: 3.99,
+    milk: 'Whole',
+    vegan: false,
+  };
 
-export {firebase};
+  setDoc(specialOfTheDay, docData, {merge: true})
+  .then(() => {
+    console.log('This value has been written to the database');
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
+writeDailySpecial();
+*/
+export {app, auth};

@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
+
 const HomeScreen = ({ navigation }) => {
+
   return (
     <View style={styles.container}>
       <Text>Hello, world! bruh i hate my life</Text>
       <StatusBar style="auto" />
+      <TouchableOpacity>
+      <Text> bruh</Text>
+      </TouchableOpacity>
     </View>
   );
 }
