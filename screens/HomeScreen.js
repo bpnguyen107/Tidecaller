@@ -48,6 +48,7 @@ const HomeScreen = ({ navigation }) => {
         marginVertical: 8,
         padding: 10,
         width: 250,
+        height: 55,
         marginTop: 150,
       }}>
         <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{date}</Text>
@@ -75,7 +76,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginVertical: 8,
     padding: 10,
-    width: 250
+    width: 250,
+    height: 55
   },
   innerItem: {
     color: 'white',
