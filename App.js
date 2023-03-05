@@ -6,6 +6,9 @@ import MapScreen from './screens/MapScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import FavoriteScreen from './screens/FavoriteScreen';
+import ForumScreen from './screens/ForumScreen';
+import SettingScreen from './screens/SettingScreen';
 
 import { useState, useEffect } from 'react';
 import { app } from "./backend/firebaseConfig";
@@ -24,34 +27,29 @@ export default function App() {
       if (user) {
         setUserOptions(true);
       }
-      else 
-      {
+      else {
         setUserOptions(false);
       }
     })
 
     return unsubscribe;
 
-  }, [] );
-
-  //{showUserOptions ? (
-  //  <Drawer.Screen name="Profile" component={ProfileScreen} />
-  //  ): <Drawer.Screen name="Login" component={LoginScreen} />}
-
-  //<Drawer.Screen options={{showUserOptions2}? {drawerItemStyle: {height: 0}}: false} name="Profile" component={ProfileScreen} />
-  //<Drawer.Screen options={{showUserOptions}? {drawerItemStyle: {height: 0}}: true} name="Login" component={LoginScreen} />
+  }, []);
 
   return (
-    
+
     <NavigationContainer>
       <Drawer.Navigator>
         <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Favorites" component={FavoriteScreen} />
         <Drawer.Screen name="Map" component={MapScreen} />
+        <Drawer.Screen name="Forums" component={ForumScreen} />
         {showUserOptions ? (
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-        ): 
-        <Drawer.Screen name="Login" component={LoginScreen} />}
-        <Drawer.Screen options={{drawerItemStyle: {height: 0}}} name="Sign Up" component={SignUpScreen} />
+          <Drawer.Screen name="Profile" component={ProfileScreen} />
+        ) :
+          <Drawer.Screen name="Login" component={LoginScreen} />}
+        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Sign Up" component={SignUpScreen} />
+        <Drawer.Screen name="Settings" component={SettingScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
