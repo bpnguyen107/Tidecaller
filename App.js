@@ -49,9 +49,7 @@ export default function App() {
           headerStyle: {
             backgroundColor: '#081424'
           },
-          headerTitleStyle: {
-            color: 'white'
-          },
+          headerTintColor: 'white',
         }}
       >
         <Drawer.Screen name="Home" component={HomeScreen} />
