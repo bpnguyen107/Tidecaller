@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { useState, useEffect } from 'react';
+
 import HomeScreen from './screens/HomeScreen';
 import MapScreen from './screens/MapScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -9,9 +11,9 @@ import ProfileScreen from './screens/ProfileScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
 import SettingScreen from './screens/SettingScreen';
+
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
-import { useState, useEffect } from 'react';
 import { app } from "./backend/firebaseConfig";
 import { getAuth } from 'firebase/auth';
 

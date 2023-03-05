@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
         data={tides}
         renderItem={({ item }) => <Item hilo={item.type} date={item.t} height={item.v} />}
       />
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </View>
   );
 }

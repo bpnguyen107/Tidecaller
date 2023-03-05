@@ -11,54 +11,54 @@ const auth = getAuth(app);
 
 //Sign Out Function
 function signOutUser() {
-signOut(auth).then(() => {
+  signOut(auth).then(() => {
     console.log("Sign-out successful");
-}).catch((error) => {
+  }).catch((error) => {
     console.log("Error Code: ", error.code)
     console.log("Error Message: ", error.message);
-});
+  });
 }
 
 const ProfileScreen = ({ navigation }) => {
 
-    const navigate = useNavigation();
+  const navigate = useNavigation();
 
-    //direct to the login screen when the user signs out
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (!user) {
-          navigate.navigate("Login");
-        }
-      })
-      return unsubscribe;
-    }, [] );
-    
+  //direct to the login screen when the user signs out
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (!user) {
+        navigate.navigate("Login");
+      }
+    })
+    return unsubscribe;
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <StatusBar style="auto" />
 
-            <Text> Login </Text>
-             
-            <TouchableOpacity>
-                <Text>
-                    Email: {auth.currentUser?.email}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text>
-                    Name: {auth.currentUser?.displayName}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => signOutUser()}>
-                <Text>
-                    Sign Out
-                </Text>
-            </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <StatusBar style="light" />
 
-            
-        </View>
-    );
+      <Text> Login </Text>
+
+      <TouchableOpacity>
+        <Text>
+          Email: {auth.currentUser?.email}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text>
+          Name: {auth.currentUser?.displayName}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => signOutUser()}>
+        <Text>
+          Sign Out
+        </Text>
+      </TouchableOpacity>
+
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
