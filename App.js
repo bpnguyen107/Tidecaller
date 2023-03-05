@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import HomeScreen from './screens/HomeScreen';
 import MapScreen from './screens/MapScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -10,13 +10,33 @@ import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
 import SettingScreen from './screens/SettingScreen';
 import { FontAwesome } from '@expo/vector-icons';
-
+import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
 import { useState, useEffect } from 'react';
 import { app } from "./backend/firebaseConfig";
 import { getAuth } from 'firebase/auth';
 
-const Drawer = createDrawerNavigator();
+function CustomDrawerContent(props) {
+  let [fontsLoaded] = useFonts({
+    Eczar_400Regular,
+  });
 
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItem
+        label="Tidecaller"
+        onPress={() => console.log("Pressed header")}
+        labelStyle={{ color: '#c0e0ff', fontSize: 52, textAlign: 'center', fontFamily: 'Eczar_400Regular' }}
+      />
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+}
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [showUserOptions, setUserOptions] = useState(false);
@@ -37,9 +57,9 @@ export default function App() {
   }, []);
 
   return (
-
     <NavigationContainer>
       <Drawer.Navigator
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
           drawerStyle: {
             backgroundColor: '#084254',
