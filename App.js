@@ -19,7 +19,6 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [showUserOptions, setUserOptions] = useState(false);
-  const [showUserOptions2, setUserOptions2] = useState(true);
   const auth = getAuth(app);
 
   useEffect(() => {
@@ -39,7 +38,22 @@ export default function App() {
   return (
 
     <NavigationContainer>
-      <Drawer.Navigator>
+      <Drawer.Navigator
+        screenOptions={{
+          drawerStyle: {
+            backgroundColor: '#084254',
+          },
+          drawerLabelStyle: {
+            color: 'white'
+          },
+          headerStyle: {
+            backgroundColor: '#081424'
+          },
+          headerTitleStyle: {
+            color: 'white'
+          },
+        }}
+      >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Favorites" component={FavoriteScreen} />
         <Drawer.Screen name="Map" component={MapScreen} />
