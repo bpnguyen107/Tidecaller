@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Modal, Pressable, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { FontAwesome } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
+import { Calendar } from 'react-native-calendars';
 
 const Item = ({ hilo, date, height }) => {
 
@@ -20,6 +22,7 @@ const Item = ({ hilo, date, height }) => {
 const HomeScreen = ({ navigation }) => {
   const [date, setDate] = useState("");
   const [tides, setTides] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const today = new Date();
 
@@ -42,6 +45,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <View style={{
         borderColor: 'white',
         borderWidth: 2,
@@ -57,8 +61,40 @@ const HomeScreen = ({ navigation }) => {
         data={tides}
         renderItem={({ item }) => <Item hilo={item.type} date={item.t} height={item.v} />}
       />
-      <StatusBar style="light" />
-    </View>
+      <Pressable onPress={() => setModalVisible(true)}>
+        <FontAwesome style={{ marginBottom: 10 }} name="calendar" size={24} color="white" />
+      </Pressable>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable
+              style={{ paddingTop: 10 }}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <FontAwesome style={{ marginBottom: 10 }} name="calendar" size={24} color="white" />
+            </Pressable>
+            <Calendar
+              theme={{
+                calendarBackground: "#084254",
+                dayTextColor: "#ffffff",
+                monthTextColor: "#ffffff",
+                selectedDayBackgroundColor: 'red'
+              }}
+              onDayPress={day => {
+                console.log('selected day', day);
+              }}
+              hideExtraDays={true}
+            />
+          </View>
+        </View>
+      </Modal>
+    </View >
   );
 }
 
@@ -85,7 +121,32 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalView: {
+    backgroundColor: '#084254',
+    padding: 10,
+    alignItems: 'center',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 export default HomeScreen;
