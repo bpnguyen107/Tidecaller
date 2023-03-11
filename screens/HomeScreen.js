@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View, Modal, Pressable, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Modal, Pressable, FlatList, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { FontAwesome } from '@expo/vector-icons';
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 
 const Item = ({ hilo, date, height }) => {
-
   const time = date.slice(-5);
 
   return (
@@ -59,17 +58,19 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      <View style={{
-        borderColor: 'white',
-        borderWidth: 2,
-        marginVertical: 8,
-        padding: 10,
-        width: 250,
-        height: 55,
-        marginTop: 150,
-      }}>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{displayedDate}</Text>
-      </View>
+      <Pressable onPress={() => setModalVisible(true)}>
+        <View style={{
+          borderColor: 'white',
+          borderWidth: 2,
+          marginVertical: 8,
+          padding: 10,
+          width: 250,
+          height: 55,
+          marginTop: 150,
+        }}>
+          <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{displayedDate}</Text>
+        </View>
+      </Pressable>
       <FlatList
         data={tides}
         renderItem={({ item }) => <Item hilo={item.type} date={item.t} height={item.v} />}
@@ -84,8 +85,19 @@ const HomeScreen = ({ navigation }) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <View style={styles.centeredView}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={{
+              height: '100%',
+              opacity: 0.5
+            }}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          />
           <View style={styles.modalView}>
             <Pressable
               style={{ paddingTop: 10 }}
