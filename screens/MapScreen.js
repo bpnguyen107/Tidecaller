@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Animated } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const MapScreen = ({ navigation }) => {
 
   const [loc, setLoc] = useState(null);
 
   useEffect(() => {
-    console.log('something');
     const requestPermissions = async () => {
         const foreground = await Location.requestForegroundPermissionsAsync();
         if (foreground.granted) {
@@ -23,7 +23,6 @@ const MapScreen = ({ navigation }) => {
                 accuracy: Location.Accuracy.BestForNavigation,
             },
             (location) => {
-              console.log('location null');
               setLoc(location);
             }
           );
@@ -42,7 +41,6 @@ const MapScreen = ({ navigation }) => {
   } else {
       //loading view
   }
-  console.log(latitude_real);
   return (
     <View style={styles.container}>
       <MapView
