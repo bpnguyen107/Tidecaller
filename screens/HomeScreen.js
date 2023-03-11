@@ -75,9 +75,18 @@ const HomeScreen = ({ navigation }) => {
         data={tides}
         renderItem={({ item }) => <Item hilo={item.type} date={item.t} height={item.v} />}
       />
-      <Pressable onPress={() => setModalVisible(true)}>
-        <FontAwesome style={{ marginBottom: 10 }} name="calendar" size={24} color="white" />
-      </Pressable>
+      <View
+        style={{
+          backgroundColor: "#084254",
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "center"
+        }}
+      >
+        <Pressable onPress={() => setModalVisible(true)}>
+          <FontAwesome style={{ marginVertical: 10 }} name="calendar" size={24} color="white" />
+        </Pressable>
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -117,7 +126,7 @@ const HomeScreen = ({ navigation }) => {
                 setSelectedDay(day.dateString);
               }}
               markedDates={marked}
-              initialDate={selectedDate}
+              initialDate={selectedDay}
               hideExtraDays
               enableSwipeMonths
             />
