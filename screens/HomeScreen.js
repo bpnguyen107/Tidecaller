@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Modal, Pressable, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { FontAwesome } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 
 const Item = ({ hilo, date, height }) => {
@@ -19,18 +19,18 @@ const Item = ({ hilo, date, height }) => {
   );
 }
 
+const today = new Date();
+
 const HomeScreen = ({ navigation }) => {
-  const [date, setDate] = useState("");
   const [tides, setTides] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const today = new Date();
+  const [selectedDay, setSelectedDay] = useState(today.toISOString().substring(0, 10));
 
   useEffect(() => {
-    setDate(today.toDateString());
-
-    const ISOdate = today.toISOString().substring(0, 10).split("-").join("");
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${ISOdate}&end_date=${ISOdate}&datum=MLLW&station=1612480&time_zone=lst_ldt&units=english&interval=hilo&format=json`
+    const selectedDate = new Date(selectedDay)
+    const ISOdate = selectedDate.toISOString().substring(0, 10);
+    const queryDate = ISOdate.split("-").join("");
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${queryDate}&end_date=${queryDate}&datum=MLLW&station=1612480&time_zone=lst_ldt&units=english&interval=hilo&format=json`
 
     fetch(url)
       .then((res) => res.json())
@@ -41,7 +41,20 @@ const HomeScreen = ({ navigation }) => {
       .catch((err) => {
         console.log(err.message);
       })
-  }, [])
+  }, [selectedDay])
+
+  const marked = useMemo(() => {
+    return {
+      [selectedDay]: {
+        selected: true,
+        disableTouchEvent: true,
+      }
+    };
+  }, [selectedDay]);
+
+  const selectedDate = new Date(selectedDay);
+  selectedDate.setDate(selectedDate.getDate() + 1);
+  const displayedDate = selectedDate.toDateString();
 
   return (
     <View style={styles.container}>
@@ -55,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
         height: 55,
         marginTop: 150,
       }}>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{date}</Text>
+        <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{displayedDate}</Text>
       </View>
       <FlatList
         data={tides}
@@ -84,12 +97,17 @@ const HomeScreen = ({ navigation }) => {
                 calendarBackground: "#084254",
                 dayTextColor: "#ffffff",
                 monthTextColor: "#ffffff",
-                selectedDayBackgroundColor: 'red'
+                selectedDayBackgroundColor: 'red',
+                todayTextColor: '#00adf5',
               }}
               onDayPress={day => {
                 console.log('selected day', day);
+                setSelectedDay(day.dateString);
               }}
-              hideExtraDays={true}
+              markedDates={marked}
+              initialDate={selectedDate}
+              hideExtraDays
+              enableSwipeMonths
             />
           </View>
         </View>
