@@ -24,7 +24,7 @@ Number.prototype.toRadians = function () {
 }
 
 //Haversine formula
-function distance(lat1, lng1, lat2, lng2) {
+export function distance(lat1, lng1, lat2, lng2) {
   const R = 6371000;
   const phi1 = lat1.toRadians();
   const phi2 = lat2.toRadians();
