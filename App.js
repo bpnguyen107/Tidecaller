@@ -84,7 +84,10 @@ export default function App() {
                 color="white"
                 size={size}
               />
-            )
+            ),
+            headerTitleStyle: {
+              fontSize: 14
+            }
           }}
         />
         <Drawer.Screen name="Favorites" component={FavoriteScreen}

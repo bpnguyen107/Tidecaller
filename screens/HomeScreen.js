@@ -90,6 +90,7 @@ const HomeScreen = ({ navigation }) => {
       console.log("Station Name:", closest.name);
 
       setStation(closest.id);
+      navigation.setOptions({ title: `${closest.name} Tide Chart` })
     })();
   }, [location])
 
