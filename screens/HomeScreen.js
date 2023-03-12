@@ -19,6 +19,7 @@ const Item = ({ hilo, date, height }) => {
 }
 
 const today = new Date();
+today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
 
 const HomeScreen = ({ navigation }) => {
   const [tides, setTides] = useState([]);
@@ -92,7 +93,6 @@ const HomeScreen = ({ navigation }) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}
       >
