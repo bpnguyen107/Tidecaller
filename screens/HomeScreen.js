@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { FontAwesome } from '@expo/vector-icons';
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
+import * as Location from 'expo-location';
 
 const Item = ({ hilo, date, height }) => {
   const time = date.slice(-5);
@@ -18,19 +19,85 @@ const Item = ({ hilo, date, height }) => {
   );
 }
 
+Number.prototype.toRadians = function () {
+  return this * Math.PI / 180;
+}
+
+//Haversine formula
+function distance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const phi1 = lat1.toRadians();
+  const phi2 = lat2.toRadians();
+  const deltaPhi = (lat2 - lat1).toRadians();
+  const deltaLambda = (lng2 - lng1).toRadians();
+
+  const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2)
+    + Math.cos(phi1) * Math.cos(phi2) *
+    Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = R * c;
+
+  return d;
+}
+
 const today = new Date();
 today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
 
 const HomeScreen = ({ navigation }) => {
   const [tides, setTides] = useState([]);
+  const [location, setLocation] = useState(null);
+  const [station, setStation] = useState("1612480");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(today.toISOString().substring(0, 10));
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, [])
+
+  useEffect(() => {
+    if (location == null)
+      return;
+
+    (async () => {
+      const response = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions&units=english');
+      const data = await response.json();
+      const stations = data.stations;
+
+      const lat = location.coords.latitude;
+      const lng = location.coords.longitude;
+
+      let closest = stations[0]
+      let closestDistance = distance(closest.lat, closest.lng, lat, lng);
+      for (let i = 1; i < stations.length; i++) {
+        stationDistance = distance(stations[i].lat, stations[i].lng, lat, lng)
+        if (stationDistance < closestDistance) {
+          closestDistance = stationDistance;
+          closest = stations[i];
+        }
+      }
+
+      console.log("Station ID:", closest.id);
+      console.log("Station Name:", closest.name);
+
+      setStation(closest.id);
+    })();
+  }, [location])
 
   useEffect(() => {
     const selectedDate = new Date(selectedDay)
     const ISOdate = selectedDate.toISOString().substring(0, 10);
     const queryDate = ISOdate.split("-").join("");
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${queryDate}&end_date=${queryDate}&datum=MLLW&station=1612480&time_zone=lst_ldt&units=english&interval=hilo&format=json`
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${queryDate}&end_date=${queryDate}&datum=MLLW&station=${station}&time_zone=lst_ldt&units=english&interval=hilo&format=json`
 
     fetch(url)
       .then((res) => res.json())
@@ -41,7 +108,7 @@ const HomeScreen = ({ navigation }) => {
       .catch((err) => {
         console.log(err.message);
       })
-  }, [selectedDay])
+  }, [selectedDay, station])
 
   const marked = useMemo(() => {
     return {
