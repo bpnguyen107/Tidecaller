@@ -10,118 +10,97 @@ import { app } from "../backend/firebaseConfig";
 
 function signOutUser() {
   signOut(auth).then(() => {
-      console.log("Sign-out successful");
+    console.log("Sign-out successful");
   }).catch((error) => {
-      console.log("Error Code: ", error.code)
-      console.log("Error Message: ", error.message);
+    console.log("Error Code: ", error.code)
+    console.log("Error Message: ", error.message);
   });
-  }
-
-/*
-const auth = getAuth(app);
-function isUserLoggedin(){
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/firebase.User
-    const uid = user.uid;
-    console.log("signed in");
-    // ...
-  } else {
-    // User is signed out
-    // ...
-    console.log("signed out");
-  }
-});
 }
-*/
 
 const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorDisplay, setErrorDisplay] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorDisplay, setErrorDisplay] = useState("");
 
-    
-    const navigate = useNavigation();
 
-    
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (user) {
-          navigate.navigate("Profile")
-        }
-        else{
-          signOutUser();
-        }
-      })
+  const navigate = useNavigation();
 
-      return unsubscribe;
-    }, [] );
-    
 
-    function registerUser(){
-        navigate.navigate("Sign Up");
-    }
-    
-    const loginUser = async (email, password) => {
-      const loginEmail = email;
-      const loginPassword = password;
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-        console.log(userCredential.user);
-        navigate.navigate("Profile");
-        }
-        catch(error) {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("Error Code: " + errorCode);
-          console.log("Error Message: " + errorMessage);
-          mapAuthCodeToMessage(errorCode);
-          return errorCode;
-        };
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        navigate.navigate("Profile")
       }
-      
-    function mapAuthCodeToMessage(authCode){
-      switch (authCode) {
-        case "auth/wrong-password":
-          setErrorDisplay("Incorrect Password");
-          return "Incorrect Password";
-        case "auth/invalid-email":
-          setErrorDisplay("Invalid Email");
-    
-        default:
-          return "";
+      else {
+        signOutUser();
       }
+    },)
+
+    return unsubscribe;
+  }, []);
+
+
+  function registerUser() {
+    navigate.navigate("Sign Up");
+  }
+
+  const loginUser = async (email, password) => {
+    const loginEmail = email;
+    const loginPassword = password;
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      console.log(userCredential.user);
+      navigate.navigate("Profile");
     }
-    
+    catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Error Code: " + errorCode);
+      console.log("Error Message: " + errorMessage);
+      mapAuthCodeToMessage(errorCode);
+      return errorCode;
+    };
+  }
 
-    //<TextInput onPress={() => createUser(email, password)}/> 
-    return (
-        <View style={styles.container}>
-            <StatusBar style="auto" />
+  function mapAuthCodeToMessage(authCode) {
+    switch (authCode) {
+      case "auth/wrong-password":
+        setErrorDisplay("Incorrect Password");
+        return "Incorrect Password";
+      case "auth/invalid-email":
+        setErrorDisplay("Invalid Email");
 
-            <Text> Login </Text>
-            
-            <TextInput placeholder="Email" placeholderTextColor="#003f5c" onChangeText={(email) => setEmail(email)}/> 
+      default:
+        return "";
+    }
+  }
 
-            <TextInput placeholder="Password" placeholderTextColor="#003f5c" onChangeText={(password) => setPassword(password)}/> 
+  return (
+    <View style={styles.container}>
+      <StatusBar style="light" />
 
-            <TouchableOpacity onPress={() => {loginUser(email,password); setEmail(""); setPassword("")}} >
-              <Text>
-                Login User
-              </Text>
-              <TouchableOpacity onPress={() => registerUser()}>
-                <Text>
-                  Register User
-                </Text>
-              </TouchableOpacity>
-              <Text>
-                {errorDisplay}
-              </Text>
-            </TouchableOpacity>
-            
-        </View>
-    );
+      <Text> Login </Text>
+
+      <TextInput placeholder="Email" placeholderTextColor="#003f5c" onChangeText={(email) => setEmail(email)} />
+
+      <TextInput placeholder="Password" placeholderTextColor="#003f5c" onChangeText={(password) => setPassword(password)} />
+
+      <TouchableOpacity onPress={() => { loginUser(email, password); setEmail(""); setPassword("") }} >
+        <Text>
+          Login User
+        </Text>
+        <TouchableOpacity onPress={() => registerUser()}>
+          <Text>
+            Register User
+          </Text>
+        </TouchableOpacity>
+        <Text>
+          {errorDisplay}
+        </Text>
+      </TouchableOpacity>
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -130,6 +109,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loginButton: {
+    fontSize: '48px',
+  },
+  inputButtons: {
+    fontSize: 24,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderRadius: 20,
+    elevation: 3,
+    borderWidth: 1,
+    width: 200,
+    margin: 12,
+    //backgroundColor: 'black',
   },
 });
 

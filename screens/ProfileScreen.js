@@ -7,21 +7,32 @@ import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from "../backend/firebaseConfig";
 
 
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+
+//https://stackoverflow.com/questions/52805879/re-render-component-when-navigating-the-stack-with-react-navigation
+import { useIsFocused } from '@react-navigation/native'
+
+
 const auth = getAuth(app);
+const firestore = getFirestore();
 
 //Sign Out Function
 function signOutUser() {
-signOut(auth).then(() => {
+  signOut(auth).then(() => {
     console.log("Sign-out successful");
-}).catch((error) => {
+  }).catch((error) => {
     console.log("Error Code: ", error.code)
     console.log("Error Message: ", error.message);
-});
+  });
 }
 
-const ProfileScreen = ({ navigation }) => {
 
-    const navigate = useNavigation();
+const ProfileScreen = ({ navigation }) => {
+    const [userData, setUserData] = useState("");
+    const [userName, setUserName] = useState("");
+
+  const navigate = useNavigation();
+
 
     //direct to the login screen when the user signs out
     useEffect(() => {
@@ -32,13 +43,39 @@ const ProfileScreen = ({ navigation }) => {
       })
       return unsubscribe;
     }, [] );
+
+    const isFocused = useIsFocused()
+
+    /*
+    useEffect(() => {
+        if(isFocused){
+            setUserName(auth.currentUser.displayName);
+        }
+    }, [isFocused])
+    */
+
     
 
-    return (
-        <View style={styles.container}>
-            <StatusBar style="auto" />
+    const userPath = doc(firestore, `user/${auth.currentUser.uid}`);
+    //get data
+    async function readASingleDocument() {
+      console.log("Path?: " + userPath);
+      const mySnapshot = await getDoc(userPath);
+      if (mySnapshot.exists()) {
+        console.log("Entered");
+        const docData = mySnapshot.data();
+        console.log(`My data is ${JSON.stringify(docData)}`);
+        setUserData(JSON.stringify(docData));
+        return JSON.stringify(docData);
+      }
+    }
 
-            <Text> Login </Text>
+
+  return (
+    <View style={styles.container}>
+      <StatusBar style="light" />
+
+      <Text> Login </Text>
              
             <TouchableOpacity>
                 <Text>
@@ -56,9 +93,19 @@ const ProfileScreen = ({ navigation }) => {
                 </Text>
             </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => readASingleDocument()}>
+            <Text>
+              BRuh
+            </Text>
+            <Text>
+              {userData}
+            </Text>
+
+          </TouchableOpacity>
             
         </View>
-    );
+  );
+
 }
 
 const styles = StyleSheet.create({
