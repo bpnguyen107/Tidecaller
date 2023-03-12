@@ -6,7 +6,7 @@ import {getAuth} from 'firebase/auth';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, addDoc, collection } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -47,5 +47,33 @@ function writeDailySpecial(){
 }
 
 writeDailySpecial();
+
+function updateFavoriteSpots() {
+  const docData = {
+    favoriteSpots: ["men", "men"],
+  }
+
+  setDoc(specialOfTheDay, docData, {merge: true})
+  .then(() => {
+    console.log('This value has been written to the database');
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
+updateFavoriteSpots();
+
+const ordersCollection = collection(firestore, 'dailySpecial');
+
+async function addANewDocument() {
+  const newDoc = await addDoc(ordersCollection, {
+    customer: 'Arthur',
+    drink: 'Bro',
+  });
+  console.log(newDoc.id)
+}
+
+addANewDocument()
 */
-export {app, auth};
+export {app, auth, firebaseConfig};

@@ -110,6 +110,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  loginButton: {
+    fontSize: '48px',
+  },
+  inputButtons: {
+    fontSize: 24,
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderRadius: 20,
+    elevation: 3,
+    borderWidth: 1,
+    width: 200,
+    margin: 12,
+    //backgroundColor: 'black',
+  },
 });
 
 export default LoginScreen;

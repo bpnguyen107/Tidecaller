@@ -10,6 +10,8 @@ import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
+import ForumScreen2 from './screens/ForumScreen2';
+import SettingScreen from './screens/SettingScreen';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
@@ -113,7 +115,7 @@ export default function App() {
             )
           }}
         />
-        <Drawer.Screen name="Forums" component={ForumScreen}
+        <Drawer.Screen name="Forums" component={ForumScreen2}
           options={{
             drawerIcon: ({ size }) => (
               <FontAwesome
@@ -149,6 +151,17 @@ export default function App() {
             }}
           />}
         <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Sign Up" component={SignUpScreen} />
+        <Drawer.Screen name="Settings" component={SettingScreen}
+          options={{
+            drawerIcon: ({ size }) => (
+              <FontAwesome
+                name="gears"
+                color="white"
+                size={size}
+              />
+            )
+          }}
+        />
       </Drawer.Navigator>
     </NavigationContainer >
   );
