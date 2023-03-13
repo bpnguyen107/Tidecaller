@@ -1,9 +1,10 @@
-import { StyleSheet, Text, Touchable, TouchableOpacity, View, TextInput } from 'react-native';
+import { StyleSheet, Text, Touchable, TouchableOpacity, View, TextInput, SafeAreaView} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-
+import { Link, useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
 
 import { auth } from '../backend/firebaseConfig';
 
@@ -81,7 +82,6 @@ const SignUpScreen = ({ navigation }) => {
     }
       
     
-    
     function mapAuthCodeToMessage(authCode){
       switch (authCode) {
         case "auth/invalid-email":
@@ -107,51 +107,61 @@ const SignUpScreen = ({ navigation }) => {
     }
   //<TextInput onPress={() => createUser(email, password)}/> 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#084254'}}> 
+    <LinearGradient
+      style={styles.container}
+      colors={["#081319", "#084254"]}
+    >
       <StatusBar style="light" />
-
-      <Text> Sign Up </Text>
+      <Text style={{fontSize:28, fontWeight:'500', color:'#fff', marginBottom:10}}> Welcome </Text>
+      <Text style={{fontSize:16, fontWeight:'150', color: '#E0E0E0', marginBottom:250}}> Sign Up to Continue </Text>
 
       <View style={styles.inputContainer}>
 
         <TextInput style={styles.input}
           placeholder="Name"
-          placeholderTextColor="#003f5c"
+          placeholderTextColor="#E0E0E0"
           onChangeText={(name) => setUserName(name)}
         />
 
         <TextInput style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#003f5c"
+          placeholderTextColor="#E0E0E0"
           onChangeText={(email) => setEmail(email)}
         />
 
         <TextInput style={styles.input} secureTextEntry
           placeholder="Password"
-          placeholderTextColor="#003f5c"
+          placeholderTextColor="#E0E0E0"
           onChangeText={(password) => setPassword(password)}
         />
       </View>
 
+      
       <View styles={styles.buttonContainer}></View>
-      <TouchableOpacity styles={styles.button} onPress={() => { createUser(), setEmail(""), setPassword("") }} >
+
+      <TouchableOpacity styles={styles.button} 
+        onPress={() => { createUser(), setEmail(""), setPassword("") }} >
         <Text style={styles.buttonText}>
           Create User
         </Text>
       </TouchableOpacity>
+
+
       <Text style={styles.errorText}>
         {errorDisplay}
       </Text>
 
 
-    </View>
+      </LinearGradient>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    //backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -159,20 +169,24 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: '#204B5F',
+    color: '#fff',
+    marginBottom: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
   },
   buttonContainer: {
+    backgroundColor: '#204B5F',
     width: '60%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#0782F9',
+    marginTop: 20,
+    backgroundColor: '#204B5F',
     width: '100%',
     padding: 15,
     borderRadius: 10,
@@ -185,15 +199,22 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonText: {
-    color: 'black',
-    fontWeight: '700',
+    backgroundColor: '#D0E8FF',
+    paddingHorizontal: 118,
+    padding: 8,
+    borderRadius: 10,
+    overflow: 'hidden',
+    color: '#204B5F',
+    fontWeight: '600',
     fontSize: 16,
+    marginTop: 15,
   },
   buttonOutlineText: {
 
   },
   errorText: {
-    color: 'red',
+    marginTop: 15,
+    color: '#DE4B5F',
   }
 });
 

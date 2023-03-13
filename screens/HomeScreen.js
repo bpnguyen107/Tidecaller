@@ -4,6 +4,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 import * as Location from 'expo-location';
+import { LinearGradient } from 'expo-linear-gradient';
+import { buildUnavailableHoursBlocks } from 'react-native-calendars/src/timeline/Packer';
+
 
 const Item = ({ hilo, date, height }) => {
   const time = date.slice(-5);
@@ -125,7 +128,12 @@ const HomeScreen = ({ navigation }) => {
   const displayedDate = selectedDate.toDateString();
 
   return (
-    <View style={styles.container}>
+
+    //<View style={styles.container}>
+      <LinearGradient
+      style={styles.container}
+      colors={['rgba(0,0,0,0.6)', 'transparent']}
+      >
       <StatusBar style="light" />
       <Pressable onPress={() => setModalVisible(true)}>
         <View style={{
@@ -201,11 +209,14 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View >
+
+  </LinearGradient>
+   
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#0a2d39',

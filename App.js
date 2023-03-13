@@ -31,7 +31,7 @@ function CustomDrawerContent(props) {
       <DrawerItem
         label="Tidecaller"
         onPress={() => console.log("Pressed header")}
-        labelStyle={{ color: '#c0e0ff', fontSize: 52, textAlign: 'center', fontFamily: 'Eczar_400Regular' }}
+        labelStyle={{ color: '#c0e0ff', fontSize: 42, textAlign: 'center', fontFamily: 'Eczar_400Regular' }}
       />
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
