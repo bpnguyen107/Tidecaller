@@ -6,8 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
 
-import { auth } from '../backend/firebaseConfig';
 
+import { auth } from '../backend/firebaseConfig';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 
@@ -103,18 +103,19 @@ const SignUpScreen = ({ navigation }) => {
         default:
           return authCode;
       }
-
     }
+\
+
   //<TextInput onPress={() => createUser(email, password)}/> 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#084254'}}> 
+    <SafeAreaView style={{flex: 1, backgroundColor: '#081319'}}> 
     <LinearGradient
       style={styles.container}
-      colors={["#081319", "#084254"]}
+      colors={["#084254", "#081319"]}
     >
       <StatusBar style="light" />
       <Text style={{fontSize:28, fontWeight:'500', color:'#fff', marginBottom:10}}> Welcome </Text>
-      <Text style={{fontSize:16, fontWeight:'150', color: '#E0E0E0', marginBottom:250}}> Sign Up to Continue </Text>
+      <Text style={{fontSize:16, fontWeight:'150', color: '#E0E0E0', marginBottom:280}}> Sign Up to Continue </Text>
 
       <View style={styles.inputContainer}>
 
@@ -151,6 +152,15 @@ const SignUpScreen = ({ navigation }) => {
       <Text style={styles.errorText}>
         {errorDisplay}
       </Text>
+
+    <View> 
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.signUpButton}>
+          Have an Account? Log In
+        </Text>
+      </TouchableOpacity>
+
+    </View>
 
 
       </LinearGradient>
@@ -209,8 +219,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 15,
   },
-  buttonOutlineText: {
-
+  signUpButton: {
+    color: '#ccc',
+    padding: 6,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
   errorText: {
     marginTop: 15,
