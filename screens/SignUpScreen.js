@@ -1,10 +1,11 @@
 import { StyleSheet, Text, Touchable, TouchableOpacity, View, TextInput, SafeAreaView} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import { Link, useNavigation } from '@react-navigation/native';
+import { Link, NavigationContainerRefContext, useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
+
 
 
 import { auth } from '../backend/firebaseConfig';
@@ -57,8 +58,8 @@ const SignUpScreen = ({ navigation }) => {
             console.log(`CURRENT USERNAME: ${auth.currentUser.displayName}`);
             function create() {
               const docData = {
-                favoriteSpots: [],
-                userId: auth.currentUser.uid,
+                // favoriteSpots: [],
+                // userId: auth.currentUser.uid,
                 name: auth.currentUser.displayName,
               };
               setDoc(userData, docData, {merge: true});
@@ -106,6 +107,15 @@ const SignUpScreen = ({ navigation }) => {
     }
 
 
+    const handlePress = () => {
+      navigation.navigate('Login');
+      // call your second function here
+    };
+
+  
+
+
+
   //<TextInput onPress={() => createUser(email, password)}/> 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#081319'}}> 
@@ -125,18 +135,21 @@ const SignUpScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
 
         <TextInput style={styles.input}
+          autoCapitalize='none'
           placeholder="Name"
           placeholderTextColor="#E0E0E0"
           onChangeText={(name) => setUserName(name)}
         />
 
         <TextInput style={styles.input}
+          autoCapitalize='none'
           placeholder="Email"
           placeholderTextColor="#E0E0E0"
           onChangeText={(email) => setEmail(email)}
         />
 
         <TextInput style={styles.input} secureTextEntry
+          autoCapitalize='none'
           placeholder="Password"
           placeholderTextColor="#E0E0E0"
           onChangeText={(password) => setPassword(password)}
@@ -154,10 +167,8 @@ const SignUpScreen = ({ navigation }) => {
       </TouchableOpacity>
 
 
-     
-
     <View> 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={handlePress}>
         <Text style={styles.signUpButton}>
           Have an Account? Log In
         </Text>

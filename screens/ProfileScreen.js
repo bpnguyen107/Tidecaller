@@ -1,7 +1,8 @@
-import { StyleSheet, Text, Touchable, TouchableOpacity, View, TextInput } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from "../backend/firebaseConfig";
@@ -72,28 +73,34 @@ const ProfileScreen = ({ navigation }) => {
 
 
   return (
-    <View style={styles.container}>
+  <SafeAreaView style={{flex: 1, backgroundColor: '#1B3E4F'}}> 
+    <LinearGradient
+      style={styles.container}
+      colors={["#0F222C", '#0F222C']}
+    >
+  
       <StatusBar style="light" />
 
-      <Text> Login </Text>
-             
-            <TouchableOpacity>
-                <Text>
-                    Email: {auth.currentUser?.email}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
+      <TouchableOpacity>
                 <Text>
                     Name: {auth.currentUser?.displayName}
                 </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text>
+                    {auth.currentUser?.email}
+                </Text>
+            </TouchableOpacity>
+            
+
             <TouchableOpacity onPress={() => signOutUser()}>
                 <Text>
                     Sign Out
                 </Text>
             </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => readASingleDocument()}>
+          {/* <TouchableOpacity onPress={() => readASingleDocument()}>
             <Text>
               BRuh
             </Text>
@@ -101,9 +108,12 @@ const ProfileScreen = ({ navigation }) => {
               {userData}
             </Text>
 
-          </TouchableOpacity>
-            
-        </View>
+          </TouchableOpacity> */}
+
+          </LinearGradient>
+        </SafeAreaView>
+        
+        
   );
 
 }

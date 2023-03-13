@@ -76,6 +76,7 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
+  
   <SafeAreaView style={{flex: 1, backgroundColor: '#081319'}}> 
    <LinearGradient
       style={styles.container}
@@ -88,16 +89,24 @@ const LoginScreen = ({ navigation }) => {
         Welcome Back</Text>
       <Text style={{fontSize:16, fontWeight:'150', color: '#C4C8C8', marginBottom:240}}> Login to your account </Text>
 
+      <View>
+        <Text style={styles.errorText}>
+          {errorDisplay}
+        </Text>
+      </View>
+
     <View style={styles.inputContainer}>
 
       <TextInput 
         style={styles.input}
+        autoCapitalize='none'
         placeholder="Email" 
         placeholderTextColor="#E0E0E0" 
         onChangeText={(email) => setEmail(email)} />
     
-      <TextInput
+      <TextInput secureTextEntry
         style={styles.input}
+        autoCapitalize='none'
         placeholder="Password" 
         placeholderTextColor="#E0E0E0" 
         onChangeText={(password) => setPassword(password)} />
@@ -119,12 +128,6 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      <View>
-        <Text>
-          {errorDisplay}
-        </Text>
-      </View>
-
     
     </LinearGradient>
   </SafeAreaView>
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
     fontSize: '48px',
   },
   inputContainer: {
-    marginTop: 100,
+    marginTop: 10,
     width: '80%',
     marginHorizontal: 50,
   },
@@ -194,6 +197,10 @@ const styles = StyleSheet.create({
     padding: 6,
     fontSize: 14,
     
+  },
+  errorText: {
+    marginTop: 30,
+    color: '#DE4B5F',
   }
 });
 
