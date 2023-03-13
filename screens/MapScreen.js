@@ -9,7 +9,28 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function App() {
   const [station, setStation] = useState([]);
-  const [nearby, setNearby] = useState([]);
+  const [nearby, setNearby] = useState({
+    state: "",
+    tidepredoffsets:{
+      self: ""
+    }, 
+    type: "",
+    timemeridian: 0,
+    reference_id: 0,
+    timezonecorr: 0,
+    id: "",
+    name: "",
+    lat: 0,
+    lng: 0,
+    affiliations: "",
+    portscode: "",
+    products: null,
+    disclaimers: null,
+    notices: null,
+    self: null,
+    expand: null,
+    tideType: ""
+  });
   const [location, setLocation] = useState(null);
   const [pin, setPin] = useState({ latitude: 37.78825, longitude: -122.4324 });
   const [region, setRegion] = useState({
@@ -112,7 +133,17 @@ export default function App() {
           latitude: nearby.lat,
           longitude: nearby.lng
         }}
-        />
+        >
+          <Callout tooltip>
+            <View>
+              <View style={styles.bubble}>
+                <Text numberOfLines={2} style={styles.name}> {nearby.name} </Text>
+              </View>
+              <View style={styles.arrowBorder}/>
+              <View style={styles.arrow}/>
+            </View>
+          </Callout>
+        </Marker>
         <Marker
           coordinate={pin}
           pinColor="blue"
@@ -149,20 +180,34 @@ const styles = StyleSheet.create({
     //width: Dimensions.get("window").width,
     //height: Dimensions.get("window").height
   },
-  overlay: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    flex: 1,
-    justifyContent: 'flex-end',
+  bubble: {
+   flexDirection: "row",
+   alignSelf: 'flex-start',
+   backgroundColor: "#fff",
+   borderRadius: 6,
+   borderColor: "#ccc",
+   borderWidth: 0.5,
+   padding: 5,
+   width: 200, 
   },
-  container2: {
-    backgroundColor: 'black',
-    marginTop: 10,
-    position: 'absolute',
-    alignItems: 'center'
+  name: {
+    fontSize: 15,
+    marginBottom: 5
   },
-  center:{
-    alignItems: 'center',
-    position: 'absolute',
-
+  arrow: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: '#fff',
+    borderWidth: 16,
+    alignSelf: 'center',
+    marginTop: -32,
+  },
+  arrowBorder: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: '#007a87',
+    borderWidth: 16,
+    alignSelf: 'center',
+    marginTop: -0.5,
   }
 });
