@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, TouchableOpacity } from 'react-native';
 import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
 import { distance } from '../screens/HomeScreen.js'
 import { ScrollView } from 'react-native-gesture-handler';
+import { set } from 'react-native-reanimated';
 
 
 export default function App() {
+  const mapRef = useRef(null);
   const [station, setStation] = useState([]);
   const [nearby, setNearby] = useState({
     state: "",
@@ -61,6 +63,7 @@ export default function App() {
       }
     }
     setNearby(closest);
+    markerPressed(closest);
   }
 
   useEffect(() => {
@@ -78,6 +81,40 @@ export default function App() {
     fetchStation();
   }, [])
 
+  const markerPressed = (e) => {
+    const goToPoint = {
+      longitude: e.lng,
+      latitude: e.lat,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02
+    };
+
+      setRegion({
+        latitude: e.lat,
+        longitude: e.lng,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02
+      })
+      mapRef.current.animateToRegion(goToPoint, 500);
+  };
+
+  const markPressed = (m) => {
+    const goToPoint = {
+        longitude: region.longitude,
+        latitude: region.latitude,
+        latitudeDelta: 0.046,
+        longitudeDelta: 0.046,
+    };
+    if (m.marker === 'marker-press') {
+        goToPoint.longitude = m.coordinate.longitude;
+        goToPoint.latitude = m.coordinate.latitude;
+        goToPoint.latitudeDelta = 0.02;
+        goToPoint.longitudeDelta = 0.02;
+    }
+    //@ts-ignore
+    mapRef.current.animateToRegion(goToPoint, 500);
+};
+
   let currentLat = 0
   let currentLng = 0
 
@@ -85,6 +122,8 @@ export default function App() {
     currentLat = location.coords.latitude
     currentLng = location.coords.longitude
   }
+
+  //console.log(region);
 
   return (
     <View style={{ marginTop: 1, flex: 1 }}>
@@ -127,7 +166,13 @@ export default function App() {
           longitudeDelta: 0.0421,
         }}
         provider="google"
-      >
+        ref={mapRef}
+        onPress={(e) =>
+          markPressed({
+            coordinate: e.nativeEvent.coordinate,
+            marker: e.nativeEvent.action,
+          })
+        }>
         <Marker coordinate={{
           //region instead of nearby
           latitude: nearby.lat,
@@ -149,7 +194,7 @@ export default function App() {
           pinColor="blue"
           draggable={true}
           onDragStart={(e) => {
-            console.log("Drag start", e.nativeEvent.coordinates)
+            console.log("Drag start", e.nativeEvent.coordinates);
           }}
           onDragEnd={(e) => {
             setPin({
