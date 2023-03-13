@@ -26,6 +26,22 @@ export default function App() {
     setStation(stations);
   }
 
+  function getStationInfo(stationObj){
+    var names = [];
+    for (let i = 0; i < stationObj.length; i++){
+      names.push({
+        number: i,
+        description: stationObj[i].name,
+        geometry: { location: { lat: stationObj[i].lat, lng: stationObj[i].lng } }
+      });
+    }
+    return names;
+  }
+
+  // function clickedStation(stationInfoArray){
+
+  // }
+
   function calcNearby(latitude, longitude){
     const lat = latitude;
     const lng = longitude;
@@ -59,10 +75,14 @@ export default function App() {
 
   let currentLat = 0
   let currentLng = 0
-
   if (location) {
     currentLat = location.coords.latitude
     currentLng = location.coords.longitude
+  }
+
+  let stationInfo = [];
+  if (station !== []){
+    stationInfo = getStationInfo(station);
   }
 
   return (
@@ -74,6 +94,7 @@ export default function App() {
           rankby: "distance"
         }}
         onPress={(data, details) => {
+          console.log("Boob");
           // 'details' is provided when fetchDetails = true
           //console.log(data, details);
           setRegion({
@@ -82,16 +103,15 @@ export default function App() {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
           });
-          calcNearby(details.geometry.location.lat, details.geometry.location.lng);
+          // calcNearby(details.geometry.location.lat, details.geometry.location.lng);
         }}
         query={{
           key: 'AIzaSyCtlqDstZqTuGiimjz5bOggecVpbILC5Ko',
           language: 'en',
-          components: "country:us",
-          types: "establishment",
           radius: 30000,
           location: `${currentLat}, ${currentLng}`
         }}
+        predefinedPlaces={stationInfo}
         styles={{
           container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
           listView: { backgroundColor: "white" }
@@ -115,7 +135,6 @@ export default function App() {
         />
         <Marker
           coordinate={pin}
-          pinColor="blue"
           draggable={true}
           onDragStart={(e) => {
             console.log("Drag start", e.nativeEvent.coordinates)
