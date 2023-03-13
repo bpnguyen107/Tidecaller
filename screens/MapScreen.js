@@ -47,22 +47,6 @@ export default function App() {
     setStation(stations);
   }
 
-  function getStationInfo(stationObj){
-    var names = [];
-    for (let i = 0; i < stationObj.length; i++){
-      names.push({
-        number: i,
-        description: stationObj[i].name,
-        geometry: { location: { lat: stationObj[i].lat, lng: stationObj[i].lng } }
-      });
-    }
-    return names;
-  }
-
-  // function clickedStation(stationInfoArray){
-
-  // }
-
   function calcNearby(latitude, longitude){
     const lat = latitude;
     const lng = longitude;
@@ -77,6 +61,37 @@ export default function App() {
       }
     }
     setNearby(closest);
+  }
+
+  function calcNearbyArray(latitude, longitude){
+    const lat = latitude;
+    const lng = longitude;
+    var distances = new Map();
+
+    for (let i = 0; i < station.length; i++) {
+      stationDistance = distance(station[i].lat, station[i].lng, lat, lng)
+      distances.set(stationDistance, i);
+    }
+    distances = new Map([...distances.entries()].sort((a, b) => a[0] - b[0]));
+    let tenClosestIndex = [];
+    let counter = 0;
+    for (let [key, value] of distances) {
+      if (counter === 10){
+        break;
+      }
+      tenClosestIndex.push(value);
+      counter++;
+    }
+
+    var names = [];
+    for (let i = 0; i < tenClosestIndex.length; i++){
+      names.push({
+        number: tenClosestIndex[i],
+        description: station[tenClosestIndex[i]].name,
+        geometry: { location: { lat: station[tenClosestIndex[i]].lat, lng: station[tenClosestIndex[i]].lng } }
+      });
+    }
+    return names;
   }
 
   useEffect(() => {
@@ -94,16 +109,13 @@ export default function App() {
     fetchStation();
   }, [])
 
-  let currentLat = 0
-  let currentLng = 0
-  if (location) {
-    currentLat = location.coords.latitude
-    currentLng = location.coords.longitude
-  }
-
+  let currentLat = 0;
+  let currentLng = 0;
   let stationInfo = [];
-  if (station !== []){
-    stationInfo = getStationInfo(station);
+  if (location) {
+    currentLat = location.coords.latitude;
+    currentLng = location.coords.longitude;
+    stationInfo = calcNearbyArray(currentLat, currentLng);
   }
 
   return (
@@ -115,7 +127,6 @@ export default function App() {
           rankby: "distance"
         }}
         onPress={(data, details) => {
-          console.log("Boob");
           // 'details' is provided when fetchDetails = true
           //console.log(data, details);
           setRegion({
@@ -124,7 +135,7 @@ export default function App() {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
           });
-          // calcNearby(details.geometry.location.lat, details.geometry.location.lng);
+          calcNearby(details.geometry.location.lat, details.geometry.location.lng);
         }}
         query={{
           key: 'AIzaSyCtlqDstZqTuGiimjz5bOggecVpbILC5Ko',
