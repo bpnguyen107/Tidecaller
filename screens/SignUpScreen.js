@@ -104,7 +104,7 @@ const SignUpScreen = ({ navigation }) => {
           return authCode;
       }
     }
-\
+
 
   //<TextInput onPress={() => createUser(email, password)}/> 
   return (
@@ -114,8 +114,13 @@ const SignUpScreen = ({ navigation }) => {
       colors={["#084254", "#081319"]}
     >
       <StatusBar style="light" />
-      <Text style={{fontSize:28, fontWeight:'500', color:'#fff', marginBottom:10}}> Welcome </Text>
-      <Text style={{fontSize:16, fontWeight:'150', color: '#E0E0E0', marginBottom:280}}> Sign Up to Continue </Text>
+      <Text style={{fontSize:30, fontWeight:'500', color:'#F9FFFF', marginBottom:10}}> 
+        Register</Text>
+      <Text style={{fontSize:16, fontWeight:'150', color: '#C4C8C8', marginBottom:280}}> Create your account </Text>
+
+      <Text style={styles.errorText}>
+        {errorDisplay}
+      </Text>
 
       <View style={styles.inputContainer}>
 
@@ -144,14 +149,12 @@ const SignUpScreen = ({ navigation }) => {
       <TouchableOpacity styles={styles.button} 
         onPress={() => { createUser(), setEmail(""), setPassword("") }} >
         <Text style={styles.buttonText}>
-          Create User
+          Register
         </Text>
       </TouchableOpacity>
 
 
-      <Text style={styles.errorText}>
-        {errorDisplay}
-      </Text>
+     
 
     <View> 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -209,10 +212,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonText: {
-    backgroundColor: '#D0E8FF',
-    paddingHorizontal: 118,
+    backgroundColor: '#F6DD7D',
+    paddingHorizontal: 130,
     padding: 8,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: 'hidden',
     color: '#204B5F',
     fontWeight: '600',
