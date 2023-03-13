@@ -66,6 +66,37 @@ export default function App() {
     markerPressed(closest);
   }
 
+  function calcNearbyArray(latitude, longitude){
+    const lat = latitude;
+    const lng = longitude;
+    var distances = new Map();
+
+    for (let i = 0; i < station.length; i++) {
+      stationDistance = distance(station[i].lat, station[i].lng, lat, lng)
+      distances.set(stationDistance, i);
+    }
+    distances = new Map([...distances.entries()].sort((a, b) => a[0] - b[0]));
+    let tenClosestIndex = [];
+    let counter = 0;
+    for (let [key, value] of distances) {
+      if (counter === 10){
+        break;
+      }
+      tenClosestIndex.push(value);
+      counter++;
+    }
+
+    var names = [];
+    for (let i = 0; i < tenClosestIndex.length; i++){
+      names.push({
+        number: tenClosestIndex[i],
+        description: station[tenClosestIndex[i]].name,
+        geometry: { location: { lat: station[tenClosestIndex[i]].lat, lng: station[tenClosestIndex[i]].lng } }
+      });
+    }
+    return names;
+  }
+
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -117,10 +148,11 @@ export default function App() {
 
   let currentLat = 0
   let currentLng = 0
-
+  let stationInfo = [];
   if (location) {
-    currentLat = location.coords.latitude
-    currentLng = location.coords.longitude
+    currentLat = location.coords.latitude;
+    currentLng = location.coords.longitude;
+    stationInfo = calcNearbyArray(currentLat, currentLng);
   }
 
   //console.log(region);
@@ -147,11 +179,10 @@ export default function App() {
         query={{
           key: 'AIzaSyCtlqDstZqTuGiimjz5bOggecVpbILC5Ko',
           language: 'en',
-          components: "country:us",
-          types: "establishment",
           radius: 30000,
           location: `${currentLat}, ${currentLng}`
         }}
+        predefinedPlaces={stationInfo}
         styles={{
           container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
           listView: { backgroundColor: "white" }
@@ -191,7 +222,6 @@ export default function App() {
         </Marker>
         <Marker
           coordinate={pin}
-          pinColor="blue"
           draggable={true}
           onDragStart={(e) => {
             console.log("Drag start", e.nativeEvent.coordinates);
