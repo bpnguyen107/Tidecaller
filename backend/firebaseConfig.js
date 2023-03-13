@@ -6,7 +6,7 @@ import {getAuth} from 'firebase/auth';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-import { getFirestore, doc, setDoc, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, addDoc, collection, query } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -27,7 +27,7 @@ const auth = getAuth(app);
 //continue with firestore data base
 const firestore = getFirestore();
 
-/*
+
 const specialOfTheDay = doc(firestore, 'dailySpecial/2021-09-14');
 function writeDailySpecial(){
   const docData = {
@@ -75,5 +75,20 @@ async function addANewDocument() {
 }
 
 addANewDocument()
+
+/*
+async function queryForDocuments() {
+  const customerOrdersQuery = query(
+    collection(firestore, 'orders'),
+    where('drink', '==', 'Latte'),
+    limit(10)
+  );
+
+  const querySnapshot = await getDocs(customerOrdersQuery);
+  const allDocs = querySnapshot.forEach((snap) => {
+    console.log(`Document ${snap.id} contains ${JSON.stringify(snap.data())}`)
+  });
+}
+queryForDocuments();
 */
 export {app, auth, firebaseConfig};

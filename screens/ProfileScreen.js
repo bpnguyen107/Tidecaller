@@ -31,7 +31,13 @@ const ProfileScreen = ({ navigation }) => {
     const [userData, setUserData] = useState("");
     const [userName, setUserName] = useState("");
 
+    
+
   const navigate = useNavigation();
+
+  navigate.addListener('focus', () => {
+    console.log("reset")
+  });
 
 
     //direct to the login screen when the user signs out
@@ -44,16 +50,33 @@ const ProfileScreen = ({ navigation }) => {
       return unsubscribe;
     }, [] );
 
-    const isFocused = useIsFocused()
+    //const isFocused = useIsFocused();
 
+    
     /*
     useEffect(() => {
         if(isFocused){
             setUserName(auth.currentUser.displayName);
         }
-    }, [isFocused])
+        readASingleDocument()
+    }, [])
     */
-
+    useEffect(() => {
+      async function readASingleDocument() {
+        console.log("Path?: " + userPath);
+        const mySnapshot = await getDoc(userPath);
+        if (mySnapshot.exists()) {
+          console.log("Entered");
+          const docData = mySnapshot.data();
+          console.log(`My data is ${JSON.stringify(docData)}`);
+          setUserData(JSON.stringify(docData));
+          setUserName(auth.currentUser.displayName)
+          .then(console.log("good"));
+          return JSON.stringify(docData);
+        }
+      }
+      readASingleDocument();
+    }, [])
     
 
     const userPath = doc(firestore, `user/${auth.currentUser.uid}`);
@@ -66,10 +89,12 @@ const ProfileScreen = ({ navigation }) => {
         const docData = mySnapshot.data();
         console.log(`My data is ${JSON.stringify(docData)}`);
         setUserData(JSON.stringify(docData));
+        setUserName(auth.currentUser.displayName)
+        .then(console.log("good"));
         return JSON.stringify(docData);
       }
     }
-
+    readASingleDocument()
 
   return (
     <View style={styles.container}>
@@ -79,12 +104,12 @@ const ProfileScreen = ({ navigation }) => {
              
             <TouchableOpacity>
                 <Text>
-                    Email: {auth.currentUser?.email}
+                    Email: {auth.currentUser.email}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity>
                 <Text>
-                    Name: {auth.currentUser?.displayName}
+                    Name: {userName}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => signOutUser()}>
@@ -98,7 +123,7 @@ const ProfileScreen = ({ navigation }) => {
               BRuh
             </Text>
             <Text>
-              {userData}
+              userdata?
             </Text>
 
           </TouchableOpacity>

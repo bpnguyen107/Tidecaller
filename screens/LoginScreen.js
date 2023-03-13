@@ -26,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
   const navigate = useNavigation();
 
 
+  /*
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
@@ -38,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, []);
-
+  */
 
   function registerUser() {
     navigate.navigate("Sign Up");

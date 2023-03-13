@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
 import ForumScreen2 from './screens/ForumScreen2';
+import ForumScreen3 from './screens/ForumScreen3';
 import SettingScreen from './screens/SettingScreen';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -115,7 +116,18 @@ export default function App() {
             )
           }}
         />
-        <Drawer.Screen name="Forums" component={ForumScreen2}
+        <Drawer.Screen name="Forums2" component={ForumScreen2}
+          options={{
+            drawerIcon: ({ size }) => (
+              <FontAwesome
+                name="paperclip"
+                color="white"
+                size={size}
+              />
+            )
+          }}
+        />
+        <Drawer.Screen name="Forums3" component={ForumScreen}
           options={{
             drawerIcon: ({ size }) => (
               <FontAwesome
