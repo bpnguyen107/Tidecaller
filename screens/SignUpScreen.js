@@ -17,60 +17,37 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [username, setUserName] = useState("");
     const [errorDisplay, setErrorDisplay] = useState("");
+    const [userCreated, setUserCreated] = useState("");
+    const [firebaseUpdate, setFireBaseUpdate] = useState("");
 
     
     const navigate = useNavigation();
     
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (user) {
-          navigate.navigate("Home")
-        }
-      })
-      return unsubscribe;
-    }, [] )
     
 
     //create a user with firebase auth + cloudfire database
-    const createUser = async (username) => {
-      //experimental code //makes sure that name field is filled out
-      /*
-      if (username == NULL){
-        console.log("username input is empty");
-        mapAuthCodeToMessage("username/empty");
-        throw(error);
-      }
-      */
+    const createUser = async () => {
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        .then();
-        console.log(userCredential.user);
-
-        updateProfile(auth.currentUser, {
-          displayName: username,
-        }).then(() => {
-            console.log("name is updated");
+        await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log("User ", userCredential.user);
+          updateProfile(auth.currentUser, {
+            displayName: username
           }).then(() => {
-            //create the user in the firebase cloudfire database
-            const firestore = getFirestore();
-            const userData = doc(firestore, `user/${auth.currentUser.uid}`)
-            console.log(`CREATING USER DATA: user/${auth.currentUser.uid}`)
-            console.log(`CURRENT USERNAME: ${auth.currentUser.displayName}`);
-            function create() {
-              const docData = {
-                // favoriteSpots: [],
-                // userId: auth.currentUser.uid,
-                name: auth.currentUser.displayName,
-              };
-              setDoc(userData, docData, {merge: true});
-            }
-            create();
-          }).catch((error) => {
-            console.log("couldn't create user in firebase cloudfire")
-        }).catch((error) => {
-          console.log("couldn't update username");
-      });
-        
+            console.log("username updated: ", auth.currentUser.displayName)
+            setUserCreated("bruh")
+            navigate.navigate("Profile")
+
+          })
+          .catch((error) => {
+            console.log("fail name update: ", error)
+          });
+      })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        })
+
       }
       catch(error) {
           const errorCode = error.code;
@@ -81,6 +58,7 @@ const SignUpScreen = ({ navigation }) => {
           return errorCode;
       }
     }
+
       
     
     function mapAuthCodeToMessage(authCode){
@@ -112,6 +90,34 @@ const SignUpScreen = ({ navigation }) => {
       // call your second function here
     };
 
+    useEffect( () => {
+      //navigate.navigate("Profile")
+
+      async function createUserInFirestore(){
+        const firestore = getFirestore();
+        const userData = doc(firestore, `user/${auth.currentUser.uid}`)
+
+        console.log(`CREATING USER DATA: user/${auth.currentUser.uid}`)
+        console.log(`CURRENT USERNAME: ${auth.currentUser.displayName}`);
+
+        const docData = {
+          favoriteSpots: [],
+          userId: auth.currentUser.uid,
+          name: auth.currentUser.displayName,
+          email: auth.currentUser.email,
+        };
+        setDoc(userData, docData, {merge: true});
+      }
+      createUserInFirestore()
+
+      //bug here doesn't reset the text fields
+      setUserCreated("")
+      setFireBaseUpdate("updated")
+      setEmail("")
+      setPassword("")
+      setUserName("")
+
+    }, [userCreated])
   
 
 
