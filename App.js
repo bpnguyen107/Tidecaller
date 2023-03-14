@@ -12,7 +12,7 @@ import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
 import ForumScreen2 from './screens/ForumScreen2';
 import ForumScreen3 from './screens/ForumScreen3';
-
+import { Feather } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
 import { app, auth } from "./backend/firebaseConfig";
@@ -145,7 +145,7 @@ export default function App() {
             ),
             headerRight: ({size}) => (
               <Pressable onPress={() => (addDiscussionPost())}>
-              <FontAwesome
+              <Feather
                 name="plus"
                 color="white"
                 size= {25}
