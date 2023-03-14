@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, Pressable } from 'react-native';
+import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, TouchableOpacity, Touchable } from 'react-native';
 import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
-
+import { FontAwesomeIcon } from '@expo/vector-icons';
 
 export default function App() {
   const mapRef = useRef(null);
@@ -179,6 +179,7 @@ export default function App() {
   //console.log(region);
 
   return (
+  <View>
     <View style={{ marginTop: 1, flex: 1 }}>
       <GooglePlacesAutocomplete
         placeholder='Search'
@@ -261,6 +262,21 @@ export default function App() {
         </Marker>
       </MapView>
     </View>
+
+        <View style={styles.favoritedTextBar}>
+          <Text style={styles.favoritedText}> 
+          
+          {nearby.name} 
+      
+          </Text>
+          <TouchableOpacity style={styles.favoriteButton}>
+            <Text>
+            FAV
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+    </View>
   );
 }
 
@@ -273,7 +289,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   map: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    height: 725,
     //width: Dimensions.get("window").width,
     //height: Dimensions.get("window").height
   },
@@ -314,5 +331,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
+  },
+  favoritedText: {
+    display: 'flex',
+  },
+  favoritedTextBar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 750,
+  },
+  favoriteButton: {
+    marginLeft: 5,
   }
 });
