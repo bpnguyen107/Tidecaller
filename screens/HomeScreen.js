@@ -14,7 +14,9 @@ const Item = ({ hilo, date, height }) => {
   let time = date.slice(-5);
   let [hours, minutes] = time.split(':').map(Number);
   let timeValue;
-  if (hours >= 0 && hours < 12) {
+  if (hours == 0) {
+    timeValue = `12:${minutes} AM`; 
+  } else if (hours >= 0 && hours < 12) {
     timeValue = `${hours}:${minutes} AM`;
   } else if (hours == 12) {
     timeValue = `${hours}:${minutes} PM`;
