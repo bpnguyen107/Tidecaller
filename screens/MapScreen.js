@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, Pressable } from 'react-native';
 import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
 import { distance } from '../screens/HomeScreen.js'
+import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
 
 
 export default function App() {
   const mapRef = useRef(null);
+  const [favSet, setFavSet] = useState(false);
   const [station, setStation] = useState([]);
   const [nearby, setNearby] = useState({
     state: "",
@@ -34,6 +36,7 @@ export default function App() {
     tideType: ""
   });
   const [location, setLocation] = useState(null);
+  const [markerCoords, setMarkerCoords] = useState(null);
   const [pin, setPin] = useState({ latitude: 37.78825, longitude: -122.4324 });
   const [region, setRegion] = useState({
     latitude: 37.78825,
@@ -97,6 +100,10 @@ export default function App() {
     return names;
   }
 
+  const favoriteSet = (e) => {
+    setFavSet(e);
+  }
+
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -141,7 +148,20 @@ export default function App() {
         goToPoint.latitude = m.coordinate.latitude;
         goToPoint.latitudeDelta = 0.02;
         goToPoint.longitudeDelta = 0.02;
+        setMarkerCoords({
+          longitude: m.coordinate.longitude,
+          latitude: m.coordinate.latitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        })
     }
+    else if (m.marker === "marker-inside-overlay-press"){
+      goToPoint.longitude = markerCoords.longitude;
+      goToPoint.latitude = markerCoords.latitude;
+      goToPoint.latitudeDelta = markerCoords.latitudeDelta;
+      goToPoint.longitudeDelta = markerCoords.longitudeDelta;
+    }
+    //console.log(m.marker);
     //@ts-ignore
     mapRef.current.animateToRegion(goToPoint, 500);
 };
@@ -213,28 +233,20 @@ export default function App() {
           <Callout tooltip>
             <View>
               <View style={styles.bubble}>
-                <Text numberOfLines={2} style={styles.name}> {nearby.name} </Text>
+                <Text style={styles.name}> {nearby.name} </Text>
+                <CalloutSubview
+                  //style={styles.}
+                  onPress={() => {
+                    favoriteSet(!favSet);
+                    console.log('onPress Clicked')
+                  }}
+                style = {[styles.name, { backgroundColor: favSet===false ? "#fff" : "#113c74"}]}>
+                  <Text style={styles.name}> Button </Text>
+                </CalloutSubview>
               </View>
               <View style={styles.arrowBorder}/>
               <View style={styles.arrow}/>
             </View>
-          </Callout>
-        </Marker>
-        <Marker
-          coordinate={pin}
-          draggable={true}
-          onDragStart={(e) => {
-            console.log("Drag start", e.nativeEvent.coordinates);
-          }}
-          onDragEnd={(e) => {
-            setPin({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude
-            })
-          }}
-        >
-          <Callout>
-            <Text>I'm here</Text>
           </Callout>
         </Marker>
       </MapView>
@@ -263,7 +275,7 @@ const styles = StyleSheet.create({
    borderColor: "#ccc",
    borderWidth: 0.5,
    padding: 5,
-   width: 200, 
+   width: 300, 
   },
   name: {
     fontSize: 15,
@@ -284,5 +296,13 @@ const styles = StyleSheet.create({
     borderWidth: 16,
     alignSelf: 'center',
     marginTop: -0.5,
+  },
+  favButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
   }
 });
