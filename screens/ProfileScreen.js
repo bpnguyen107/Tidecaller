@@ -162,7 +162,7 @@ const ProfileScreen = ({ navigation }) => {
           User Profile
         </Text>
       </TouchableOpacity>
-      <Image source={{ uri: userProfile}} style={{ width: 200, height: 200 }} />
+      <Image source={{ uri: auth.currentUser.photoURL}} style={{ width: 200, height: 200 }} />
 
       <Text> Login </Text>
              

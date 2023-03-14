@@ -25,6 +25,7 @@ export default function ForumScreen2(navigation) {
 
   const [uploadTime, setUploadTime] = useState("04:20 April 20, 2069");
   const [username, setUserName] = useState("Anonymous");
+  const [userProfilePic , setUserProfilePic] = useState("")
 
   const hasUnsavedChanges = Boolean(image);
 
@@ -121,6 +122,7 @@ export default function ForumScreen2(navigation) {
     //setUserName(auth.currentUser?.displayName);
     if(auth.currentUser?.displayName != null){
       setUserName(auth.currentUser.displayName)
+      setUserProfilePic(auth.currentUser.photoURL)
     }
 
   }, [postID])
@@ -136,6 +138,7 @@ export default function ForumScreen2(navigation) {
       imageUri: imageUrl,
       username: username,
       uploadTime: currentDate,
+      profilePic: userProfilePic
 
     };
     await updateDoc(ImageData, docData)

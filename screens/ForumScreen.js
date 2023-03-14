@@ -17,7 +17,7 @@ from 'firebase/firestore';
 
 const Item = ({item, onPress, backgroundColor, textColor}) => (
   <View onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Image/>
+    <Image style={{width: '10%', height: '10%'}} source={{uri: item.profilePic ? item.profilePic : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}/>
     <Text style={[styles.title, {color: textColor}]}>{item.username ? item.username : "SysError"}</Text>
     <Image style={{width: '70%', height: '70%'}} source={{uri: item.imageUri ? item.imageUri : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}/> 
     <Text style={[styles.title, {color: textColor}]}>{item.message}</Text>
