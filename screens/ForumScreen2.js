@@ -148,45 +148,62 @@ export default function ForumScreen2(navigation) {
     setMessage("");
   }, [imageUrl])
 
-  function getDate() {
-    const postMonth = monthString();
-    const postDay = new Date().getDay();
-    const postYear = new Date().getFullYear();
-    const postHour = new Date().getHours();
-    const postMinutes = new Date().getMinutes();
-    //console.log(`Date: ${postHour}:${postMinutes} ${postMonth} ${postMinutes}, ${postYear}`);
-    return (`${postHour}:${postMinutes} ${postMonth} ${postDay}, ${postYear}`)
-  }
+  // function getDate() {
+  //   const postMonth = monthString();
+  //   const postDay = new Date().getDay();
+  //   const postYear = new Date().getFullYear();
+  //   const postHour = new Date().getHours();
+  //   const postMinutes = new Date().getMinutes();
+  //   //console.log(`Date: ${postHour}:${postMinutes} ${postMonth} ${postMinutes}, ${postYear}`);
+  //   return (`${postMonth} ${postDay}, ${postYear} ${postHour}:${postMinutes}`)
+  // }
 
-  function monthString(){
-    switch (new Date().getMonth() + 1 ){
-      case 1:
-        return "January"
-      case 2:
-        return "Febuary"
-      case 3:
-        return "March"
-      case 4:
-        return "April"
-      case 5:
-        return "May"
-      case 6:
-        return "June"
-      case 7:
-        return "July"
-      case 8:
-        return "August"
-      case 9:
-        return "September"
-      case 10:
-        return "October"
-      case 11:
-        return "November"
-      case 12:
-        return "December"  
+  // function monthString(){
+  //   switch (new Date().getMonth() + 1 ){
+  //     case 1:
+  //       return "January"
+  //     case 2:
+  //       return "Febuary"
+  //     case 3:
+  //       return "March"
+  //     case 4:
+  //       return "April"
+  //     case 5:
+  //       return "May"
+  //     case 6:
+  //       return "June"
+  //     case 7:
+  //       return "July"
+  //     case 8:
+  //       return "August"
+  //     case 9:
+  //       return "September"
+  //     case 10:
+  //       return "October"
+  //     case 11:
+  //       return "November"
+  //     case 12:
+  //       return "December"  
       
-    }
+  //   }
+  //}
+
+  // Fixed nelsons date function :(
+  function getDate() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const now = new Date();
+    const month = months[now.getMonth()];
+    const day = now.getDate();
+    const year = now.getFullYear();
+    let hour = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+    const formattedTime = hour + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
+    return `${month} ${day}, ${year} ${formattedTime}`;
   }
+  
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
