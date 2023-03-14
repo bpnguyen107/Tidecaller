@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Image, View, Platform, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../backend/firebaseConfig";
-
 import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getFirestore, doc, setDoc, getDoc, addDoc, collection, updateDoc } from 'firebase/firestore';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-
 import { useNavigation } from '@react-navigation/native';
-
 import { auth } from '../backend/firebaseConfig';
 
 
@@ -91,7 +87,7 @@ export default function ForumScreen2(navigation) {
     async function uploadImage() {
       if (image != null) {
         const date = Date.now()
-        console.log("we are here")
+        console.log("Image Uploaded")
         const img = await fetch(image);
         const ImageRef = ref(getStorage(), `${postID}.img`);
         const bytes = await img.blob();
@@ -210,9 +206,6 @@ export default function ForumScreen2(navigation) {
         }}/>
       }
 
-      <TouchableOpacity onPress={() => (console.log("bruh"))}>
-        <Text>BRuh</Text>
-      </TouchableOpacity>
       
     </View>
   );

@@ -1,13 +1,14 @@
 import { StyleSheet, Text, Touchable, TouchableOpacity, View, TextInput, SafeAreaView} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import { Link, useNavigation } from '@react-navigation/native';
+import { Link, NavigationContainerRefContext, useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { MaterialIcons } from 'react-native-vector-icons/MaterialIcons';
 
-import { auth } from '../backend/firebaseConfig';
 
+
+import { auth } from '../backend/firebaseConfig';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 
@@ -21,6 +22,7 @@ const SignUpScreen = ({ navigation }) => {
 
     
     const navigate = useNavigation();
+    
     
 
     //create a user with firebase auth + cloudfire database
@@ -57,6 +59,7 @@ const SignUpScreen = ({ navigation }) => {
           return errorCode;
       }
     }
+
       
     
     function mapAuthCodeToMessage(authCode){
@@ -82,6 +85,12 @@ const SignUpScreen = ({ navigation }) => {
       }
     }
 
+
+    const handlePress = () => {
+      navigation.navigate('Login');
+      // call your second function here
+    };
+
     useEffect( () => {
       //navigate.navigate("Profile")
 
@@ -91,14 +100,13 @@ const SignUpScreen = ({ navigation }) => {
 
         console.log(`CREATING USER DATA: user/${auth.currentUser.uid}`)
         console.log(`CURRENT USERNAME: ${auth.currentUser.displayName}`);
-       
         const docData = {
           favoriteSpots: [],
           userId: auth.currentUser.uid,
           name: auth.currentUser.displayName,
           email: auth.currentUser.email,
         };
-        setDoc(userData, docData, {merge: true});  
+        setDoc(userData, docData, {merge: true});
       }
       createUserInFirestore()
 
@@ -113,30 +121,38 @@ const SignUpScreen = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#084254'}}> 
+    <SafeAreaView style={{flex: 1, backgroundColor: '#081319'}}> 
     <LinearGradient
       style={styles.container}
-      colors={["#081319", "#084254"]}
+      colors={["#084254", "#081319"]}
     >
       <StatusBar style="light" />
-      <Text style={{fontSize:28, fontWeight:'500', color:'#fff', marginBottom:10}}> Welcome </Text>
-      <Text style={{fontSize:16, fontWeight:'150', color: '#E0E0E0', marginBottom:250}}> Sign Up to Continue </Text>
+      <Text style={{fontSize:30, fontWeight:'500', color:'#F9FFFF', marginBottom:10}}> 
+        Register</Text>
+      <Text style={{fontSize:16, fontWeight:'150', color: '#C4C8C8', marginBottom:280}}> Create your account </Text>
+
+      <Text style={styles.errorText}>
+        {errorDisplay}
+      </Text>
 
       <View style={styles.inputContainer}>
 
         <TextInput style={styles.input}
+          autoCapitalize='none'
           placeholder="Name"
           placeholderTextColor="#E0E0E0"
           onChangeText={(name) => setUserName(name)}
         />
 
         <TextInput style={styles.input}
+          autoCapitalize='none'
           placeholder="Email"
           placeholderTextColor="#E0E0E0"
           onChangeText={(email) => setEmail(email)}
         />
 
         <TextInput style={styles.input} secureTextEntry
+          autoCapitalize='none'
           placeholder="Password"
           placeholderTextColor="#E0E0E0"
           onChangeText={(password) => setPassword(password)}
@@ -147,14 +163,19 @@ const SignUpScreen = ({ navigation }) => {
       <View styles={styles.buttonContainer}></View>
       <TouchableOpacity styles={styles.button} onPress={() => { createUser() }} >
         <Text style={styles.buttonText}>
-          Create User
+          Register
         </Text>
       </TouchableOpacity>
 
 
-      <Text style={styles.errorText}>
-        {errorDisplay}
-      </Text>
+    <View> 
+      <TouchableOpacity onPress={handlePress}>
+        <Text style={styles.signUpButton}>
+          Have an Account? Log In
+        </Text>
+      </TouchableOpacity>
+
+    </View>
 
 
       </LinearGradient>
@@ -203,18 +224,21 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonText: {
-    backgroundColor: '#D0E8FF',
-    paddingHorizontal: 118,
+    backgroundColor: '#F6DD7D',
+    paddingHorizontal: 130,
     padding: 8,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: 'hidden',
     color: '#204B5F',
     fontWeight: '600',
     fontSize: 16,
     marginTop: 15,
   },
-  buttonOutlineText: {
-
+  signUpButton: {
+    color: '#ccc',
+    padding: 6,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
   errorText: {
     marginTop: 15,

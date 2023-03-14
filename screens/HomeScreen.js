@@ -9,14 +9,27 @@ import { buildUnavailableHoursBlocks } from 'react-native-calendars/src/timeline
 
 
 const Item = ({ hilo, date, height }) => {
-  const time = date.slice(-5);
 
+  // Converting date from military to AM/PM
+  let time = date.slice(-5);
+  let [hours, minutes] = time.split(':').map(Number);
+  let timeValue;
+  if (hours >= 0 && hours < 12) {
+    timeValue = `${hours}:${minutes} AM`;
+  } else if (hours == 12) {
+    timeValue = `${hours}:${minutes} PM`;
+  } else {
+    timeValue = `${hours - 12}:${minutes} PM`;
+  }
+    // const hour = parseInt(date.slice(-5));
+    // const time = hour >= 12 ? 'PM' : 'AM';
+ 
   return (
     <View style={styles.item}>
       <Text style={{ color: 'white', fontSize: 20, flexGrow: 1, textAlign: 'center', fontWeight: 'bold' }}>{(hilo == 'H') ? 'HIGH' : 'LOW'}</Text>
       <View style={styles.innerItem}>
-        <Text style={styles.text}>{time}</Text>
-        <Text style={styles.text}>{height} ft</Text>
+        <Text style={styles.text}>{timeValue}</Text>
+        <Text style={styles.text}>{Number.parseFloat(height).toFixed(2)} ft</Text>
       </View>
     </View>
   );
@@ -27,7 +40,7 @@ Number.prototype.toRadians = function () {
 }
 
 //Haversine formula
-function distance(lat1, lng1, lat2, lng2) {
+export function distance(lat1, lng1, lat2, lng2) {
   const R = 6371000;
   const phi1 = lat1.toRadians();
   const phi2 = lat2.toRadians();
@@ -144,6 +157,7 @@ const HomeScreen = ({ navigation }) => {
           width: 250,
           height: 55,
           marginTop: 150,
+          backgroundColor: '#084254'
         }}>
           <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{displayedDate}</Text>
         </View>
@@ -194,7 +208,7 @@ const HomeScreen = ({ navigation }) => {
                 calendarBackground: "#084254",
                 dayTextColor: "#ffffff",
                 monthTextColor: "#ffffff",
-                selectedDayBackgroundColor: 'red',
+                selectedDayBackgroundColor: '#DE4B5F',
                 todayTextColor: '#00adf5',
               }}
               onDayPress={day => {
