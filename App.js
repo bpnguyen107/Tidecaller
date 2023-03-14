@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { useState, useEffect } from 'react';
 
@@ -16,8 +16,9 @@ import SettingScreen from './screens/SettingScreen';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
-import { app } from "./backend/firebaseConfig";
+import { app, auth } from "./backend/firebaseConfig";
 import { getAuth } from 'firebase/auth';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 function CustomDrawerContent(props) {
   let [fontsLoaded] = useFonts({
@@ -40,11 +41,26 @@ function CustomDrawerContent(props) {
   );
 }
 
+
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [showUserOptions, setUserOptions] = useState(false);
   const auth = getAuth(app);
+
+  //navigate to forum create page if user is logged in
+//else navigate to login page
+  const navigationRef = useNavigationContainerRef();
+
+  function addDiscussionPost() {
+    if(auth.currentUser != null) {
+      navigationRef.navigate("Forums2")
+    }
+    else{
+      navigationRef.navigate("Login")
+    }
+  }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -61,7 +77,7 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Drawer.Navigator
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
@@ -116,7 +132,8 @@ export default function App() {
             )
           }}
         />
-        <Drawer.Screen name="Forums2" component={ForumScreen2}
+        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Forums2" component={ForumScreen2} />
+        <Drawer.Screen name="Forums" component={ForumScreen}
           options={{
             drawerIcon: ({ size }) => (
               <FontAwesome
@@ -124,18 +141,19 @@ export default function App() {
                 color="white"
                 size={size}
               />
-            )
-          }}
-        />
-        <Drawer.Screen name="Forums3" component={ForumScreen}
-          options={{
-            drawerIcon: ({ size }) => (
+            ),
+            headerRight: ({size}) => (
+              <Pressable onPress={() => (addDiscussionPost())}>
               <FontAwesome
-                name="paperclip"
+                name="plus"
                 color="white"
-                size={size}
+                size= {25}
+                style={{
+                  paddingRight: 15,
+                  paddingLeft: 25
+                }}
               />
-            )
+              </Pressable>)
           }}
         />
         {showUserOptions ? (

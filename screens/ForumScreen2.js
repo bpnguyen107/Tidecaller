@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform } from 'react-native';
+import { Button, Image, View, Platform, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 import { initializeApp } from "firebase/app";
@@ -9,17 +9,29 @@ import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } fr
 import { getFirestore, doc, setDoc, getDoc, addDoc, collection, updateDoc } from 'firebase/firestore';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { auth } from '../backend/firebaseConfig';
+
 
 initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
-export default function ForumScreen2() {
+export default function ForumScreen2(navigation) {
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
   const [postID, setPostID] = useState("");
   const [imageUrl, setImageUrl] = useState(undefined);
 
+  const [uploadTime, setUploadTime] = useState("04:20 April 20, 2069");
+  const [username, setUserName] = useState("Anonymous");
+
+  const hasUnsavedChanges = Boolean(image);
+
+  const navigate = useNavigation();
+
+  //function to give camera roll permissions / not important
+  /*
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -30,7 +42,7 @@ export default function ForumScreen2() {
       }
     })();
   }, []);
-
+  */
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -75,7 +87,6 @@ export default function ForumScreen2() {
   useEffect(() => {
     if (postID == "")
       return;
-    
     async function uploadImage() {
       if (image != null) {
         const date = Date.now()
@@ -97,39 +108,86 @@ export default function ForumScreen2() {
             await getDownloadURL(reference).then((x) => {
               setImageUrl(x);
               console.log("Image Url: ", x)
+              navigate.navigate("Forums") //navigate to forums page //timings may be off
             })
         }).catch((error) => {
             console.log(error.message)
         })
-
-
-      
       }
     }
     uploadImage();
 
-    //reset the screen
-    setImage(null);
-    setMessage("");
+    //setUploadTime(getDate());
+    //setUserName(auth.currentUser?.displayName);
+    if(auth.currentUser?.displayName != null){
+      setUserName(auth.currentUser.displayName)
+    }
+
   }, [postID])
 
   
   useEffect(() => {
-    console.log("Uploading Image Uri")
+    console.log("Uploading Image Uri");
+
+    const currentDate = getDate();
     async function updateImageUri() {
     const ImageData = doc(firestore, `discussionForum/${postID}`)
     const docData = {
       imageUri: imageUrl,
-      username: auth.currentUser?.displayName
+      username: username,
+      uploadTime: currentDate,
+
     };
     await updateDoc(ImageData, docData)
   }
-    updateImageUri();
+    updateImageUri().then(console.log("upload success"));
 
     //reset the post id
     setPostID("");
+    //reset the screen
+    setImage(null);
+    setMessage("");
   }, [imageUrl])
 
+  function getDate() {
+    const postMonth = monthString();
+    const postDay = new Date().getDay();
+    const postYear = new Date().getFullYear();
+    const postHour = new Date().getHours();
+    const postMinutes = new Date().getMinutes();
+    //console.log(`Date: ${postHour}:${postMinutes} ${postMonth} ${postMinutes}, ${postYear}`);
+    return (`${postHour}:${postMinutes} ${postMonth} ${postDay}, ${postYear}`)
+  }
+
+  function monthString(){
+    switch (new Date().getMonth() + 1 ){
+      case 1:
+        return "January"
+      case 2:
+        return "Febuary"
+      case 3:
+        return "March"
+      case 4:
+        return "April"
+      case 5:
+        return "May"
+      case 6:
+        return "June"
+      case 7:
+        return "July"
+      case 8:
+        return "August"
+      case 9:
+        return "September"
+      case 10:
+        return "October"
+      case 11:
+        return "November"
+      case 12:
+        return "December"  
+      
+    }
+  }
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -148,6 +206,10 @@ export default function ForumScreen2() {
           uploadMessages()
         }}/>
       }
+
+      <TouchableOpacity onPress={() => (console.log("bruh"))}>
+        <Text>BRuh</Text>
+      </TouchableOpacity>
       
     </View>
   );

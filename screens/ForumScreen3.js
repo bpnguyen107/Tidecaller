@@ -25,15 +25,8 @@ export default function ForumScreen3() {
     const customerOrdersQuery = query(
       collection(firestore, 'discussionForum'),
       orderBy('date', 'desc'),
-      limit(10)
+      limit(20)
     );
-  
-    /*
-    const querySnapshot = await getDocs(customerOrdersQuery);
-    const allDocs = querySnapshot.forEach((snap) => {
-      console.log(`Document ${snap.id} contains ${JSON.stringify(snap.data())}`)
-    })
-    */
     
     onSnapshot(
         customerOrdersQuery, 

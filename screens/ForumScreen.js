@@ -14,33 +14,15 @@ import * as ImagePicker from 'expo-image-picker';
 import { getFirestore, doc, setDoc, getDocs, onSnapshot, orderBy,
   addDoc, collection, updateDoc, query, where, limit } 
 from 'firebase/firestore';
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../backend/firebaseConfig";
-
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'sea glass',
-    message: "1",
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'surf',
-    message: "2",
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'fishing', 
-    message: "3", },
-];
 
 const Item = ({item, onPress, backgroundColor, textColor}) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Text style={[styles.title, {color: textColor}]}>{item.username}</Text>
-    <Image style={{width: '70%', height: '70%'}} source={{uri: item.imageUri}}/> 
+  <View onPress={onPress} style={[styles.item, {backgroundColor}]}>
+    <Image/>
+    <Text style={[styles.title, {color: textColor}]}>{item.username ? item.username : "SysError"}</Text>
+    <Image style={{width: '70%', height: '70%'}} source={{uri: item.imageUri ? item.imageUri : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}/> 
     <Text style={[styles.title, {color: textColor}]}>{item.message}</Text>
-  </TouchableOpacity>
+    <Text> Uploaded: {item.uploadTime ? item.uploadTime : "Egging Time"}</Text>
+  </View>
 );
 
 const ForumScreen = () => {
@@ -54,7 +36,6 @@ const ForumScreen = () => {
     return onSnapshot(discussionForumQuery,(snapshot) => {
       const postData = [];
       snapshot.forEach((doc) => postData.push({... doc.data() }));
-      //console.log(postData);  // <------
       setItems(postData);
     })
     }, [])
@@ -71,7 +52,6 @@ const ForumScreen = () => {
     return (
       <Item
         item={item}
-        //onPress={() => setSelectedId(item.id)}
         backgroundColor={backgroundColor}
         textColor={color}
       />

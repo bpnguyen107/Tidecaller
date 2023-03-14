@@ -29,7 +29,8 @@ const SignUpScreen = ({ navigation }) => {
         .then((userCredential) => {
           console.log("User ", userCredential.user);
           updateProfile(auth.currentUser, {
-            displayName: username
+            displayName: username,
+            photoURL: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
           }).then(() => {
             console.log("username updated: ", auth.currentUser.displayName)
             setUserCreated("bruh")
