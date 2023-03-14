@@ -4,6 +4,7 @@ import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
 import { distance } from '../screens/HomeScreen.js'
+import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
@@ -39,8 +40,8 @@ export default function App() {
   const [markerCoords, setMarkerCoords] = useState(null);
   const [pin, setPin] = useState({ latitude: 37.78825, longitude: -122.4324 });
   const [region, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: 34.06935,
+    longitude: -118.44468,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   });
@@ -248,6 +249,15 @@ export default function App() {
               <View style={styles.arrow}/>
             </View>
           </Callout>
+        </Marker>
+        <Marker coordinate={{
+          //region instead of nearby
+          latitude: currentLat,
+          longitude: currentLng
+        }}>
+          <View>
+            <MaterialIcons name="location-history" size={40} color="#1c4152" />
+          </View>
         </Marker>
       </MapView>
     </View>
