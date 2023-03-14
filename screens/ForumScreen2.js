@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform, Text } from 'react-native';
+import { Button, Image, View, Platform, Text, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../backend/firebaseConfig";
@@ -13,12 +13,15 @@ import { auth } from '../backend/firebaseConfig';
 initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
+
+
 export default function ForumScreen2(navigation) {
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
   const [postID, setPostID] = useState("");
   const [imageUrl, setImageUrl] = useState(undefined);
-
+  const [category, setCategory] = useState('General');
+  const categories = ['General', 'Seaglass', 'Surf', 'Fish']
   const [uploadTime, setUploadTime] = useState("04:20 April 20, 2069");
   const [username, setUserName] = useState("Anonymous");
   const [userProfilePic , setUserProfilePic] = useState("")
@@ -26,20 +29,44 @@ export default function ForumScreen2(navigation) {
   const hasUnsavedChanges = Boolean(image);
 
   const navigate = useNavigation();
+  function handleCategoryChange(value) {
+    setCategory(value);
+  }
+ 
 
-  //function to give camera roll permissions / not important
-  /*
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
-  */
+  const RadioGroup = ({ options, selectedOption, onSelect }) => {
+    return (
+      <View style={styles.radioContainer}>
+      {options.map((option) => (
+        <TouchableOpacity
+          key={option}
+          style={[
+            styles.radioButton,
+            {
+              backgroundColor:
+                selectedOption === option ? '#FFD700' : '#f0f0f0',
+              flex: 1,
+              marginHorizontal: 5,
+            },
+          ]}
+          onPress={() => onSelect(option)}
+        >
+          <Text
+            style={[
+              styles.radioButtonText,
+              { color: selectedOption === option ? '#fff' : '#000' },
+            ]}
+          >
+            {option}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
+  
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -64,6 +91,7 @@ export default function ForumScreen2(navigation) {
                 const newDoc = await addDoc(messageData, {
                   message: message,
                   date: currentDate,
+                  category: category,
               })
               setPostID(newDoc.id)
               
@@ -148,45 +176,6 @@ export default function ForumScreen2(navigation) {
     setMessage("");
   }, [imageUrl])
 
-  // function getDate() {
-  //   const postMonth = monthString();
-  //   const postDay = new Date().getDay();
-  //   const postYear = new Date().getFullYear();
-  //   const postHour = new Date().getHours();
-  //   const postMinutes = new Date().getMinutes();
-  //   //console.log(`Date: ${postHour}:${postMinutes} ${postMonth} ${postMinutes}, ${postYear}`);
-  //   return (`${postMonth} ${postDay}, ${postYear} ${postHour}:${postMinutes}`)
-  // }
-
-  // function monthString(){
-  //   switch (new Date().getMonth() + 1 ){
-  //     case 1:
-  //       return "January"
-  //     case 2:
-  //       return "Febuary"
-  //     case 3:
-  //       return "March"
-  //     case 4:
-  //       return "April"
-  //     case 5:
-  //       return "May"
-  //     case 6:
-  //       return "June"
-  //     case 7:
-  //       return "July"
-  //     case 8:
-  //       return "August"
-  //     case 9:
-  //       return "September"
-  //     case 10:
-  //       return "October"
-  //     case 11:
-  //       return "November"
-  //     case 12:
-  //       return "December"  
-      
-  //   }
-  //}
 
   // Fixed nelsons date function :(
   function getDate() {
@@ -215,6 +204,16 @@ export default function ForumScreen2(navigation) {
         <TextInput placeholder="Caption" placeholderTextColor="#003f5c" onChangeText={(message) => setMessage(message)}/>
       </TouchableOpacity>
       }
+      {
+        image &&
+        <View>
+        <RadioGroup
+          options={categories}
+          selectedOption={category}
+          onSelect={(option) => setCategory(option)}
+        />
+      </View>
+      }
       {image && message &&
       <Button 
         title="Upload" 
@@ -227,3 +226,24 @@ export default function ForumScreen2(navigation) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  radioButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderRadius: 10,
+  },
+  radioButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+  },
+});
