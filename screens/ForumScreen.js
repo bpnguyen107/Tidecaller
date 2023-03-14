@@ -5,62 +5,53 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Text,
+  Text, Image,
   TouchableOpacity,
   View,
   Button
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'sea glass',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'surf',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'fishing'  },
-];
+import { getFirestore, doc, setDoc, getDocs, onSnapshot, orderBy,
+  addDoc, collection, updateDoc, query, where, limit } 
+from 'firebase/firestore';
 
 const Item = ({item, onPress, backgroundColor, textColor}) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
-  </TouchableOpacity>
+  <View onPress={onPress} style={[styles.item, {backgroundColor}]}>
+    <Image/>
+    <Text style={[styles.title, {color: textColor}]}>{item.username ? item.username : "SysError"}</Text>
+    <Image style={{width: '70%', height: '70%'}} source={{uri: item.imageUri ? item.imageUri : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}/> 
+    <Text style={[styles.title, {color: textColor}]}>{item.message}</Text>
+    <Text> Uploaded: {item.uploadTime ? item.uploadTime : "Egging Time"}</Text>
+  </View>
 );
 
 const ForumScreen = () => {
   const [selectedId, setSelectedId] = useState();
   const [image, setImage] = useState(null);
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+    const db = getFirestore();
+    const discussionForumQuery = query(collection(db, "discussionForum"), orderBy("date", "desc"))
+    return onSnapshot(discussionForumQuery,(snapshot) => {
+      const postData = [];
+      snapshot.forEach((doc) => postData.push({... doc.data() }));
+      setItems(postData);
+    })
+    }, [])
+  
+  //console.log(items)
 
   const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? '#0000ff' : '#6495ed';
-    const color = item.id === selectedId ? 'white' : 'black';
+    const backgroundColor = item.id === selectedId ? '#6495ed' : '#6495ed';
+    const color = item.id === selectedId ? 'black' : 'black';
   
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
   
-    console.log(result);
-  
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
   
 
     return (
       <Item
         item={item}
-        onPress={() => setSelectedId(item.id)}
         backgroundColor={backgroundColor}
         textColor={color}
       />
@@ -70,21 +61,12 @@ const ForumScreen = () => {
   return (
     
     <SafeAreaView style={styles.container}>
-      <FlatList style={styles.popularItems} inverted
-        data={DATA}
+      <FlatList style={styles.popularItems}
+        data={items}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         extraData={selectedId}
       />
-
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Upload!</Text>
-    </View>
-
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-    </View>
 
     </SafeAreaView>
     
@@ -97,13 +79,13 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0, //?
   },
   popularItems: {
-    borderWidth: 4
+    borderWidth: 0
   },
   item: {
-    padding: 20,
+    padding: 2,
     marginVertical: 8,
-    marginHorizontal: 16,
-    height: 100,
+    marginHorizontal: 0,
+    height: 700,
     borderRadius: 9,
     alignContent: 'center',
   },
