@@ -8,9 +8,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
-import { FontAwesomeIcon } from '@expo/vector-icons';
 
 export default function App() {
+  const [favClicked, setFavClicked] = useState(false);
   const mapRef = useRef(null);
   const [favSet, setFavSet] = useState(false);
   const [station, setStation] = useState([]);
@@ -190,6 +190,7 @@ export default function App() {
         onPress={(data, details) => {
           // 'details' is provided when fetchDetails = true
           //console.log(data, details);
+          setFavClicked(false)
           setRegion({
             latitude: details.geometry.location.lat,
             longitude: details.geometry.location.lng,
@@ -269,11 +270,14 @@ export default function App() {
           {nearby.name} 
       
           </Text>
-          <TouchableOpacity style={styles.favoriteButton}>
-            <Text>
-            FAV
-            </Text>
-          </TouchableOpacity>
+          <FontAwesome 
+            name={favClicked ? "star" : "star-o"}
+            size={24}
+            color={favClicked ? "#FFD233" : "black"}
+            onPress={() => {
+              setFavClicked(!favClicked);
+            }}
+          />
         </View>
 
     </View>
