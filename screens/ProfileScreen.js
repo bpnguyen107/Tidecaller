@@ -165,7 +165,9 @@ const ProfileScreen = ({ navigation }) => {
       colors={["#084254", "#081319"]}
     >
 
-      <StatusBar style="light" />
+      <TouchableOpacity onPress={pickImage}>
+      <Image source={{ uri: auth.currentUser.photoURL}} style={{ width: 200, height: 200 }} />
+      </TouchableOpacity>
  
       <Text style={{fontSize:30, fontWeight:'500', color:'#F9FFFF', marginBottom:10}}>
         Hello {userName}!
