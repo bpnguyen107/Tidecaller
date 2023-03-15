@@ -96,6 +96,7 @@ export default function App() {
         />
         <Drawer.Screen name="Favorites" component={FavoriteScreen}
           options={{
+            unmountOnBlur:true,
             drawerIcon: ({ size }) => (
               <FontAwesome
                 name="star-o"
