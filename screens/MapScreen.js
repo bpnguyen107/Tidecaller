@@ -9,6 +9,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
 
+import { auth, app, firestore } from '../backend/firebaseConfig';
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
+
 let favList = [];
 function buildFavArray(name, add){
   if (add){
@@ -212,6 +215,78 @@ const MapScreen = () => {
     }
 
     //console.log(region);
+
+    
+    //user stuff
+    const [userId, setUserId] = useState("bruh");
+    const [favoriteData, setFavoriteData] = useState([]);
+
+    //finds the userId
+    useEffect(() => {
+      if (auth.currentUser?.uid != null) {
+        setUserId(auth.currentUser.uid)
+      }
+      else {
+        console.log("user not logged in")
+      }
+    }, [])
+
+    //get the user's favorite data
+    
+
+    useEffect(() => {
+      const favoriteRef = doc(firestore, "user", userId)
+      
+      async function getFavoriteData () {
+        const favoriteSnap = await getDoc(favoriteRef);
+
+        if (favoriteSnap.exists()) {
+          console.log("Favorite Data: ", favoriteSnap.data().favoriteSpots);
+          setFavoriteData(favoriteSnap.data().favoriteSpots)
+        }
+        else {
+          console.log("No Favorite Data")
+        }
+      }
+      getFavoriteData();
+      
+    },[userId])
+    
+    useEffect(() => {
+      
+      for (let i = 0; i < favoriteData.length; i++) {
+        if (!favList.includes(favoriteData[i].name)){
+          favList.push(favoriteData[i].name)
+        }
+      }
+      
+    }, [favoriteData])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    <TouchableOpacity onPress={() => {console.log(bruh())}}>
+        <Text style={{fontSize:40}}>
+          Bruh
+        </Text>
+      </TouchableOpacity>
+    */
 
     return (
     <View>
