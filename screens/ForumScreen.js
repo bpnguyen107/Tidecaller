@@ -13,6 +13,41 @@ import {
 import { getFirestore, onSnapshot, orderBy, collection, query }
   from 'firebase/firestore';
 
+const categories = [
+  { name: 'General', backgroundColor: 'red' },
+  { name: 'Seaglass', backgroundColor: 'blue' },
+  { name: 'Surf', backgroundColor: 'yellow' },
+  { name: 'Fish', backgroundColor: 'green' },
+];
+
+const RadioGroup = ({ options, filters, onSelect }) => {
+  return (
+    <View style={styles.radioContainer}>
+      {options.map((option) => (
+        <TouchableOpacity
+          key={option.name}
+          onPress={() => onSelect(option.name)}
+        >
+          <Text
+            style={[
+              styles.radioButtonText,
+              styles.radioButton,
+              {
+                backgroundColor: (filters === option.name) ? option.backgroundColor : '#f0f0f0',
+                color: (filters === option.name) ? '#fff' : '#000',
+                marginHorizontal: 5,
+                overflow: "hidden"
+              },
+            ]}
+          >
+            {option.name}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
 const Item = ({ item, onPress, textColor }) => (
   <View onPress={onPress} style={[styles.item, { backgroundColor: '#183645' }]}>
 
@@ -56,9 +91,8 @@ const Item = ({ item, onPress, textColor }) => (
 
 
 const ForumScreen = () => {
-  const [selectedId, setSelectedId] = useState();
-  const [image, setImage] = useState(null);
   const [items, setItems] = useState([])
+  const [filter, setFilter] = useState("General");
 
   useEffect(() => {
     const db = getFirestore();
@@ -71,33 +105,31 @@ const ForumScreen = () => {
   }, [])
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? '#6495ed' : '#6495ed';
-    const color = item.id === selectedId ? '#D9DBE0' : '#D9DBE0';
-
+    if ((filter !== item.category)) {
+      return null;
+    }
     return (
-
       <Item
         item={item}
-        backgroundColor={backgroundColor}
-        textColor={color}
+        backgroundColor='#6495ed'
+        textColor='#D9DBE0'
       />
-
     );
   };
 
   return (
-
     <SafeAreaView style={styles.container}>
+      <RadioGroup
+        options={categories}
+        filters={filter}
+        onSelect={(option) => setFilter(option)}
+      />
       <FlatList style={styles.popularItems}
         data={items}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        extraData={selectedId}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
-
     </SafeAreaView>
-
   );
 };
 
@@ -112,10 +144,27 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 2,
+    marginVertical: 8,
     alignContent: 'center',
   },
   title: {
     fontSize: 24,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  radioButton: {
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 10,
+  },
+  radioButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

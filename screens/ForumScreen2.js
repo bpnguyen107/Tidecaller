@@ -33,7 +33,6 @@ export default function ForumScreen2(navigation) {
     { name: 'Fish', backgroundColor: 'green' },
   ];
 
-
   const RadioGroup = ({ options, selectedOption, onSelect }) => {
     return (
       <View style={styles.radioContainer}>
