@@ -221,8 +221,6 @@ const MapScreen = () => {
     const [userId, setUserId] = useState("bruh");
     const [favoriteData, setFavoriteData] = useState([]);
 
-    const db = getFirestore(app);
-
     //finds the userId
     useEffect(() => {
       if (auth.currentUser?.uid != null) {
