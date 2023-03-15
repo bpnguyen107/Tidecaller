@@ -1,53 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, {useState, useEffect} from 'react'
+import { Text, View } from 'react-native'
 
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../backend/firebaseConfig";
+import { auth, app } from '../backend/firebaseConfig';
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
-import { getFirestore, doc, setDoc, getDocs, onSnapshot, orderBy,
-        addDoc, collection, updateDoc, query, where, limit } 
-    from 'firebase/firestore';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+const db = getFirestore(app);
 
-initializeApp(firebaseConfig);
-const firestore = getFirestore();
+const FavoriteScreen = () => {
+  const [userId, setUserId] = useState(auth.currentUser.uid);
+  const [favoriteData, setFavoriteData] = useState();
+  //finds the userId
+  useEffect(() => {
+    if (auth.currentUser?.uid != null) {
+      setUserId(auth.currentUser.uid)
+    }
+  }, [])
+  
+  const favoriteRef = doc(db, "user", userId) //might have to place this elsewhere depending on timing
 
-export default function ForumScreen3() {
-  const [image, setImage] = useState(null);
-  const [message, setMessage] = useState("");
-  const [postID, setPostID] = useState("");
-  //const [displayImage, setDisplayImage] = useState(null);
+  async function editFavorites() {
+    const favoriteSnap = await getDoc(favoriteRef);
 
-
-  async function queryForDocuments() {
-    const customerOrdersQuery = query(
-      collection(firestore, 'discussionForum'),
-      orderBy('date', 'desc'),
-      limit(20)
-    );
-    
-    onSnapshot(
-        customerOrdersQuery, 
-        (querySnapshot) => {
-        console.log(JSON.stringify(querySnapshot.docs.map((e) => e.data())));
-        }
-    );
-    
+    if (favoriteSnap.exists()) {
+      console.log("Favorite Data: ", favoriteSnap.data().favoriteSpots);
+      setFavoriteData(favoriteSnap.data().favoriteSpots)
+    }
+    else {
+      console.log("No Favorite Data")
+    }
   }
-  queryForDocuments();
+
+  //pass in parameters
+  async function updateFavorites() {
+    await updateDoc(favoriteRef, {
+      favoriteSpots: arrayUnion({"name": "bruh123", "geopoint": "your mom's house"})
+    }).then(console.log("favorite update success"))
+  }
+
+  //pass in paramters
+  async function removeFavorites() {
+    await updateDoc(favoriteRef, { 
+      favoriteSpots: arrayRemove({"name": "bruh123", "geopoint": "your mom's house"})
+    }).then(console.log("favorite remove success"))
+  }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Pick an image from camera roll"/>
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      <Button 
-        title="Work on uploading a message" 
-      />
-      <TouchableOpacity>
-        <TextInput placeholder="Password" placeholderTextColor="#003f5c" onChangeText={(message) => setMessage(message)}/>
-      </TouchableOpacity>
+    <View>
+    <Text>FavoriteScreen</Text>
+
+    <TouchableOpacity onPress={() => editFavorites()}>
+      <Text style={{fontSize:40}}>
+        Bruh
+      </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => updateFavorites()}>
+      <Text style={{fontSize:40}}>
+        Chicken
+      </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => removeFavorites()}>
+      <Text style={{fontSize:40}}>
+        Ceramic
+      </Text>
+    </TouchableOpacity>
     </View>
-  );
+  )
 }
+
+export default FavoriteScreen
