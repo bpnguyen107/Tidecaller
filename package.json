@@ -12,8 +12,6 @@
     "@expo-google-fonts/eczar": "^0.2.3",
     "@expo/ngrok": "^2.4.3",
     "@expo/webpack-config": "^0.17.2",
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@react-navigation/drawer": "^6.6.0",
     "@react-navigation/native": "^6.1.4",
     "expo": "~47.0.12",
