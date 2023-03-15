@@ -205,8 +205,8 @@ const MapScreen = () => {
       mapRef.current.animateToRegion(goToPoint, 500);
   };
 
-    let currentLat = 0
-    let currentLng = 0
+    let currentLat = 34.06935;
+    let currentLng = -118.44468;
     let stationInfo = [];
     if (location) {
       currentLat = location.coords.latitude;
