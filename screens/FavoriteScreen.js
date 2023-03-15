@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Text, View } from 'react-native'
 
 import { auth, app } from '../backend/firebaseConfig';
-import { getFirestore, doc, getDoc, updateDoc } from '@firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const db = getFirestore(app);
@@ -31,8 +31,18 @@ const FavoriteScreen = () => {
     }
   }
 
+  //pass in parameters
   async function updateFavorites() {
+    await updateDoc(favoriteRef, {
+      favoriteSpots: arrayUnion({"name": "bruh123", "geopoint": "your mom's house"})
+    }).then(console.log("favorite update success"))
+  }
 
+  //pass in paramters
+  async function removeFavorites() {
+    await updateDoc(favoriteRef, { 
+      favoriteSpots: arrayRemove({"name": "bruh123", "geopoint": "your mom's house"})
+    }).then(console.log("favorite remove success"))
   }
 
   return (
@@ -42,6 +52,18 @@ const FavoriteScreen = () => {
     <TouchableOpacity onPress={() => editFavorites()}>
       <Text style={{fontSize:40}}>
         Bruh
+      </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => updateFavorites()}>
+      <Text style={{fontSize:40}}>
+        Chicken
+      </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => removeFavorites()}>
+      <Text style={{fontSize:40}}>
+        Ceramic
       </Text>
     </TouchableOpacity>
     </View>
