@@ -220,6 +220,7 @@ const MapScreen = () => {
     //user stuff
     const [userId, setUserId] = useState("bruh");
     const [favoriteData, setFavoriteData] = useState([]);
+    const favoriteRef = doc(firestore, "user", userId)
 
     //finds the userId
     useEffect(() => {
@@ -233,10 +234,7 @@ const MapScreen = () => {
 
     //get the user's favorite data
     
-
     useEffect(() => {
-      const favoriteRef = doc(firestore, "user", userId)
-      
       async function getFavoriteData () {
         const favoriteSnap = await getDoc(favoriteRef);
 
@@ -262,19 +260,18 @@ const MapScreen = () => {
       
     }, [favoriteData])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    async function updateUserFavorites(placeName, addOrDelete){
+      if(addOrDelete){
+        await updateDoc(favoriteRef, {
+          favoriteSpots: arrayUnion({"name": placeName})
+         }).then(console.log("favorite update success"))
+      }
+      else{
+        await updateDoc(favoriteRef, { 
+          favoriteSpots: arrayRemove({"name": placeName})
+        }).then(console.log("favorite remove success"))
+      }
+    }
 
 
 
@@ -392,6 +389,7 @@ const MapScreen = () => {
               onPress={() => {
                 setFavClicked(!favClicked);
                 buildFavArray(nearby.name, !favClicked);
+                updateUserFavorites(nearby.name, !favClicked);
               }}
             />
           </View>
