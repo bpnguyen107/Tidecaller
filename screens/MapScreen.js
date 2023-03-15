@@ -232,8 +232,6 @@ const MapScreen = () => {
     }, [])
 
     //get the user's favorite data
-    
-
     useEffect(() => {
       const favoriteRef = doc(firestore, "user", userId)
       
@@ -263,30 +261,6 @@ const MapScreen = () => {
     }, [favoriteData])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    <TouchableOpacity onPress={() => {console.log(bruh())}}>
-        <Text style={{fontSize:40}}>
-          Bruh
-        </Text>
-      </TouchableOpacity>
-    */
 
     return (
     <View>
