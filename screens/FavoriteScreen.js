@@ -7,7 +7,6 @@ const FavoriteScreen = () => {
 
   const [favorites, setFavorites] = useState([]);
   const [clicked, setClicked] = useState(new Map());
-  const [key, setKey] = useState();
 
 
 	useEffect(()=>{
