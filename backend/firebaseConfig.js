@@ -91,4 +91,4 @@ async function queryForDocuments() {
 }
 queryForDocuments();
 */
-export {app, auth, firebaseConfig};
+export {app, auth, firebaseConfig, firestore};
