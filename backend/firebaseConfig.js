@@ -10,13 +10,14 @@ import { getFirestore, doc, setDoc, addDoc, collection, query } from 'firebase/f
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC6HRRXalQxN1mmJWYfAIJcpoXMljA0tCg",
-  authDomain: "seashellseahell-e06ab.firebaseapp.com",
-  projectId: "seashellseahell-e06ab",
-  storageBucket: "seashellseahell-e06ab.appspot.com",
-  messagingSenderId: "227298476787",
-  appId: "1:227298476787:web:ebd19a544c006e8a9aad86",
-  measurementId: "G-SCDTSN05C3"
+  apiKey: "AIzaSyBn3N2myYaW7fcbUdwiaSM1lFfDl5zbJQk",
+  authDomain: "ggwelost-21cc8.firebaseapp.com",
+  databaseURL: "https://ggwelost-21cc8-default-rtdb.firebaseio.com",
+  projectId: "ggwelost-21cc8",
+  storageBucket: "ggwelost-21cc8.appspot.com",
+  messagingSenderId: "905255917279",
+  appId: "1:905255917279:web:2d0626fe3286b31d0c3b6a",
+  measurementId: "G-C5DZK5B0NK"
 };
 
 // Initialize Firebase
