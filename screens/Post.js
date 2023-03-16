@@ -222,7 +222,7 @@ export default function Post(navigation) {
           placeholderTextColor="#D9DBE0" 
           maxLength={1000} 
           onChangeText={(message) => setMessage(message)}
-          style={{ color: 'wite', fontSize: 16, paddingHorizontal: 10, height: 40, marginLeft: 10, marginRight: 10 }}
+          style={{ color: 'white', fontSize: 16, paddingHorizontal: 10, height: 40, marginLeft: 10, marginRight: 10 }}
           multiline={true}
           numberOfLines={3}/>
       <View style={{ position: 'absolute', bottom: -10, left: 20, right: 20, height: 0.75, backgroundColor: 'white' }}></View>
