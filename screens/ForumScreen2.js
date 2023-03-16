@@ -199,7 +199,7 @@ export default function ForumScreen2(navigation) {
 
       {image &&
         <TouchableOpacity>
-          <TextInput placeholder="Caption" placeholderTextColor="#003f5c" onChangeText={(message) => setMessage(message)} />
+          <TextInput placeholder="Caption" placeholderTextColor="#003f5c" maxLength={1000} onChangeText={(message) => setMessage(message)} />
         </TouchableOpacity>
       }
       {

@@ -15,9 +15,11 @@ const Item = ({ hilo, date, height }) => {
   const [hours, minutes] = time.split(':');
   const hoursNumeric = Number(hours);
   let timeValue;
-  if (hoursNumeric >= "" && hoursNumeric < 12) {
-    timeValue = `${hoursNumeric}:${minutes} AM`;
-  } else if (hoursNumeric == 12) {
+  if (hours == 0) {
+    timeValue = `12:${minutes} AM`; 
+  } else if (hours >= 0 && hours < 12) {
+    timeValue = `${hours}:${minutes} AM`;
+  } else if (hours == 12) {
     timeValue = `${hours}:${minutes} PM`;
   } else {
     timeValue = `${hoursNumeric - 12}:${minutes} PM`;

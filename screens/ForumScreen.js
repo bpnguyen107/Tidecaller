@@ -55,19 +55,21 @@ import { getFirestore, onSnapshot, orderBy, collection, query }
   };
 
 
-const Item = ({ item, onPress, textColor }) => (
-  <View onPress={onPress} style={[styles.item, { backgroundColor: '#183645' }]}>
-
-    <View style={{ flexDirection: 'row', marginTop: 15, marginBottom: 15 }}>
-      <Image
-        style={{ width: '12%', aspectRatio: 1, marginLeft: 20, marginRight: 10, borderRadius: 50 }}
-        source={{ uri: item.profilePic ? item.profilePic : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png" }}
-      />
-      <View>
-        <Text
-          style={[styles.title, { color: textColor, fontWeight: '475' }]}>
-          {item.username ? item.username : "SysError"}
-        </Text>
+const Item = ({item, onPress, textColor}) => (
+  <View onPress={onPress} style={[styles.item, {backgroundColor :'#183645'}]}>
+    
+  <View style={{flexDirection: 'row', marginTop: 15, marginBottom: 15}}>
+    <Image
+      style={{width: '12%', aspectRatio:1, marginLeft: 20, marginRight: 10, borderRadius: 50}}
+      source={{uri: item.profilePic ? item.profilePic : 
+              "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
+              cache: 'force-cache'}}
+    />
+  <View>
+    <Text 
+      style={[styles.title, {color: textColor, fontWeight: '475'}]}>
+      {item.username ? item.username : "SysError"}
+    </Text>
 
         <Text style={{ color: '#C7C7CC' }}>
           Posted on {item.uploadTime ? item.uploadTime : "Egging Time"}
@@ -75,8 +77,10 @@ const Item = ({ item, onPress, textColor }) => (
       </View>
     </View>
     <Image
-      style={{ width: '100%', aspectRatio: 3 / 2 }}
-      source={{ uri: item.imageUri ? item.imageUri : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png" }}
+     style={{width: '100%', aspectRatio: 3/2}}
+     source={{uri: item.imageUri ? item.imageUri : 
+              "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
+            cache: "force-cache"}}
     />
     <Text
       style={{
