@@ -14,7 +14,7 @@ const FavoriteScreen = () => {
   const [favorites, setFavorites] = useState([]);
   const [clicked, setClicked] = useState(new Map());
 
-  const [userId, setUserId] = useState(auth.currentUser.uid);
+  const [userId, setUserId] = useState("bruh");
   const [favoriteData, setFavoriteData] = useState();
   //finds the userId
   useEffect(() => {
