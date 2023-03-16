@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   FlatList,
   SafeAreaView,
@@ -13,40 +14,46 @@ import {
 import { getFirestore, onSnapshot, orderBy, collection, query }
   from 'firebase/firestore';
 
-const categories = [
-  { name: 'General', backgroundColor: 'red' },
-  { name: 'Seaglass', backgroundColor: 'blue' },
-  { name: 'Surf', backgroundColor: 'yellow' },
-  { name: 'Fish', backgroundColor: 'green' },
-];
+  const categories = [
+    { name: 'General', backgroundGradient: ['#69D0EB', '#62A88D'], activeGradient:['#3F5CBF', '#356C81']},
+    { name: 'Seaglass', backgroundGradient: ['#69D0EB', '#62A88D'], activeGradient:['#3F5CBF', '#356C81']},
+    { name: 'Surf', backgroundGradient: ['#69D0EB', '#62A88D'], activeGradient: ['#3F5CBF', '#356C81']},
+    { name: 'Fish', backgroundGradient: ['#69D0EB', '#62A88D'], activeGradient: ['#3F5CBF', '#356C81']},
+  ];
 
-const RadioGroup = ({ options, filters, onSelect }) => {
-  return (
-    <View style={styles.radioContainer}>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option.name}
-          onPress={() => onSelect(option.name)}
-        >
-          <Text
-            style={[
-              styles.radioButtonText,
-              styles.radioButton,
-              {
-                backgroundColor: (filters === option.name) ? option.backgroundColor : '#f0f0f0',
-                color: (filters === option.name) ? '#fff' : '#000',
-                marginHorizontal: 5,
-                overflow: "hidden"
-              },
-            ]}
+
+  const RadioGroup = ({ options, filters, onSelect }) => {
+    return (
+      <View style={styles.radioContainer}>
+        {options.map((option) => (
+          <TouchableOpacity
+            key={option.name}
+            onPress={() => onSelect(option.name)}
           >
-            {option.name}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
+            <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              colors={filters === option.name ? option.activeGradient : option.backgroundGradient}
+              style={[
+                styles.radioButtonText,
+                styles.radioButton,
+              ]}
+            >
+              <Text
+                style={{
+                  color: filters === option.name ? 'white' : 'white',
+                  textAlign: 'center',
+                }}
+              >
+                {option.name}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
 
 const Item = ({ item, onPress, textColor }) => (
   <View onPress={onPress} style={[styles.item, { backgroundColor: '#183645' }]}>
@@ -154,10 +161,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
+    marginRight: 7,
+    marginLeft: 7,
     marginBottom: 5,
   },
   radioButton: {
-    borderWidth: 2,
+    marginTop: 4,
+    marginBottom: 3,
     borderRadius: 10,
     padding: 10,
   },
