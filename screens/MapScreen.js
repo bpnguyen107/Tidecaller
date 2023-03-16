@@ -274,17 +274,6 @@ const MapScreen = () => {
     }
 
 
-
-
-
-    /*
-    <TouchableOpacity onPress={() => {console.log(bruh())}}>
-        <Text style={{fontSize:40}}>
-          Bruh
-        </Text>
-      </TouchableOpacity>
-    */
-
     return (
     <View>
       <View style={{ marginTop: 1, flex: 1 }}>
