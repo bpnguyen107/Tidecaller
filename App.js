@@ -10,7 +10,7 @@ import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
-import ForumScreen2 from './screens/ForumScreen2';
+import Post from './screens/Post';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
@@ -55,7 +55,7 @@ export default function App() {
 
   function addDiscussionPost() {
     if (auth.currentUser != null) {
-      navigationRef.navigate("Forums2")
+      navigationRef.navigate("Post")
     }
     else {
       navigationRef.navigate("Login")
@@ -134,7 +134,7 @@ export default function App() {
             )
           }}
         />
-        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Forums2" component={ForumScreen2} />
+        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Post" component={Post} />
         <Drawer.Screen name="Forums" component={ForumScreen}
           options={{
             drawerIcon: ({ size }) => (
