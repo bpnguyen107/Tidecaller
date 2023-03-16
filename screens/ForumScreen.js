@@ -19,7 +19,9 @@ const Item = ({item, onPress, textColor}) => (
   <View style={{flexDirection: 'row', marginTop: 15, marginBottom: 15}}>
     <Image
       style={{width: '12%', aspectRatio:1, marginLeft: 20, marginRight: 10, borderRadius: 50}}
-      source={{uri: item.profilePic ? item.profilePic : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}
+      source={{uri: item.profilePic ? item.profilePic : 
+              "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
+              cache: 'force-cache'}}
     />
   <View>
     <Text 
@@ -34,7 +36,9 @@ const Item = ({item, onPress, textColor}) => (
     </View>
     <Image
      style={{width: '100%', aspectRatio: 3/2}}
-     source={{uri: item.imageUri ? item.imageUri : "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png"}}
+     source={{uri: item.imageUri ? item.imageUri : 
+              "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
+            cache: "force-cache"}}
     />
 
     <Text 
