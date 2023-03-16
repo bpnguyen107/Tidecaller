@@ -60,7 +60,7 @@ const Item = ({item, onPress, textColor}) => (
     
   <View style={{flexDirection: 'row', marginTop: 15, marginBottom: 15}}>
     <Image
-      style={{width: '12%', aspectRatio:1, marginLeft: 20, marginRight: 10, borderRadius: 50}}
+      style={{width: '12%', aspectRatio:1, marginLeft: 10, marginRight: 10, borderRadius: 50}}
       source={{uri: item.profilePic ? item.profilePic : 
               "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
               cache: 'force-cache'}}
@@ -82,17 +82,19 @@ const Item = ({item, onPress, textColor}) => (
               "https://cdn.discordapp.com/attachments/1067598393402200086/1085075999810670692/image.png",
             cache: "force-cache"}}
     />
+
+    <LinearGradient 
+    style={{marginTop:10, marginLeft: 7, borderRadius:10, alignSelf: 'flex-start'}}
+    colors={['#3F5CBF', '#356C81']}>
+      <Text
+        style={{
+          color: textColor, padding:6, textAlign: 'center', marginLeft:5, marginRight:5}}>
+        {item.category}
+      </Text>
+    </LinearGradient>
+
     <Text
-      style={{
-        color: textColor,
-        marginLeft: 15,
-        marginTop: 10,
-      }}
-    >
-      Category: {item.category}
-    </Text>
-    <Text
-      style={[styles.title, { color: textColor, marginBottom: 10, marginTop: 10, marginLeft: 15, marginRight: 15, fontSize: 20 }]}>
+      style={[styles.title, { color: textColor, marginBottom: 10, marginTop: 10, marginLeft: 7, marginRight: 7, fontSize: 20 }]}>
       {item.message}
     </Text>
 
