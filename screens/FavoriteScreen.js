@@ -7,6 +7,7 @@ import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const db = getFirestore(app);
 
@@ -88,6 +89,7 @@ const FavoriteScreen = ({ navigation }) => {
           color: "white",
           fontSize: 22,
         }}
+        multiline={true}
         >
           {favorites[i].name}
         </Text>
@@ -125,15 +127,16 @@ const FavoriteScreen = ({ navigation }) => {
   }
 
   return (
-    <LinearGradient
-      style={styles.container}
-      colors={['rgba(0,0,0,0.6)', 'transparent']}
-    >
-      <View style={{ marginTop: 10 }}>
+  <LinearGradient
+    style={styles.container}
+    colors={['rgba(0,0,0,0.6)', 'transparent']}
+  >
+    <ScrollView>
+      <View style={{marginTop: 10}}>
         {userId == "bruh" &&
-          <TouchableOpacity
+          <TouchableOpacity 
             style={styles.button}
-            onPress={() => { navigate.navigate("Login") }}
+            onPress={() => {navigate.navigate("Login")}}
           >
             <Text
               style={{
@@ -145,7 +148,7 @@ const FavoriteScreen = ({ navigation }) => {
             >
               You Must Be Logged in to See Favorites
             </Text>
-            <Text
+            <Text 
               style={styles.buttonText}
             >
               Go to Login Screen
@@ -154,11 +157,12 @@ const FavoriteScreen = ({ navigation }) => {
         }
         {userId != "bruh" &&
           <View>
-            {printFavs}
+            { printFavs }
           </View>
         }
       </View>
-    </LinearGradient>
+    </ScrollView>
+  </LinearGradient>
   )
 }
 
