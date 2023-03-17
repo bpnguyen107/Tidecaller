@@ -1,4 +1,5 @@
 # Team Hello Kitty Flashlights - Tidecaller App
+# CS 35L - Discussion 1E
 
 ## Group Members
 - Sebastian Caid
