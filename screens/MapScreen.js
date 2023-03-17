@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, StyleSheet, View, Text } from 'react-native';
-import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
 import { distance } from '../screens/HomeScreen.js'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import { auth, app, firestore } from '../backend/firebaseConfig';
-import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
+import { auth, firestore } from '../backend/firebaseConfig';
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 
 let favList = [];
 function buildFavArray(name, add){
