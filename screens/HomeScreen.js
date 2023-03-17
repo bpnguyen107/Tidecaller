@@ -5,8 +5,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
-import { buildUnavailableHoursBlocks } from 'react-native-calendars/src/timeline/Packer';
-
 
 const Item = ({ hilo, date, height }) => {
 
@@ -15,11 +13,11 @@ const Item = ({ hilo, date, height }) => {
   const [hours, minutes] = time.split(':');
   const hoursNumeric = Number(hours);
   let timeValue;
-  if (hours == 0) {
-    timeValue = `12:${minutes} AM`; 
-  } else if (hours >= 0 && hours < 12) {
-    timeValue = `${hours}:${minutes} AM`;
-  } else if (hours == 12) {
+  if (hoursNumeric == 0) {
+    timeValue = `12:${minutes} AM`;
+  } else if (hoursNumeric >= 0 && hoursNumeric < 12) {
+    timeValue = `${hoursNumeric}:${minutes} AM`;
+  } else if (hoursNumeric == 12) {
     timeValue = `${hours}:${minutes} PM`;
   } else {
     timeValue = `${hoursNumeric - 12}:${minutes} PM`;
