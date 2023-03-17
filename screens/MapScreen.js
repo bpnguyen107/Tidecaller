@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View, Text, Animated, Modal, Button, TouchableOpacity, Touchable } from 'react-native';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
 import MapView, { Callout, Marker, CalloutSubview } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import * as Location from 'expo-location';
 import { distance } from '../screens/HomeScreen.js'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
-import { set } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { auth, app, firestore } from '../backend/firebaseConfig';
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
@@ -83,14 +82,14 @@ const MapScreen = () => {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
     });
-    
+    //fetches the api used to get the location and the station info
     const fetchStation = async() => {
       const response = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions&units=english');
       const data = await response.json();
       const stations = data.stations;
       setStation(stations);
     }
-
+    //calculates the closest station to the current location
     function calcNearby(latitude, longitude){
       const lat = latitude;
       const lng = longitude;
@@ -107,7 +106,7 @@ const MapScreen = () => {
       setNearby(closest);
       markerPressed(closest);
     }
-
+    //calculates the nearest 10 stations and pushes them to be used in the search feature
     function calcNearbyArray(latitude, longitude){
       const lat = latitude;
       const lng = longitude;
@@ -142,7 +141,7 @@ const MapScreen = () => {
     const favoriteSet = (e) => {
       setFavSet(e);
     }
-
+    //gets the user's current location
     useEffect(() => {
       const getPermissions = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -157,7 +156,7 @@ const MapScreen = () => {
       getPermissions();
       fetchStation();
     }, [])
-
+    //used to zoom the user's screen to zoom out and update the region to zoom out of 
     const markerPressed = (e) => {
       const goToPoint = {
         longitude: e.lng,
@@ -174,7 +173,7 @@ const MapScreen = () => {
         })
         mapRef.current.animateToRegion(goToPoint, 500);
     };
-
+    //used on the search feature to zoom on a marker
     const markPressed = (m) => {
       const goToPoint = {
           longitude: region.longitude,
@@ -204,7 +203,7 @@ const MapScreen = () => {
       //@ts-ignore
       mapRef.current.animateToRegion(goToPoint, 500);
   };
-
+  //gives the current location of the user
     let currentLat = 34.06935;
     let currentLng = -118.44468;
     let stationInfo = [];
@@ -276,7 +275,7 @@ const MapScreen = () => {
 
     return (
     <View>
-      <View style={{ marginTop: 1, flex: 1 }}>
+      <View style={{ marginTop: 1, flex: 1, backgroundColor:"#084254" }}>
         <GooglePlacesAutocomplete
           placeholder='Search'
           fetchDetails={true}
@@ -338,23 +337,13 @@ const MapScreen = () => {
               <View>
                 <View style={styles.bubble}>
                   <Text style={styles.name}> {nearby.name} </Text>
-                  <CalloutSubview
-                    //style={styles.}
-                    onPress={() => {
-                      favoriteSet(!favSet);
-                      console.log('onPress Clicked')
-                    }}
-                  style = {[styles.name, { backgroundColor: favSet===false ? "#fff" : "#113c74"}]}>
-                    <Text style={styles.name}> Button </Text>
-                  </CalloutSubview>
                 </View>
                 <View style={styles.arrowBorder}/>
                 <View style={styles.arrow}/>
-              </View>
+             </View>
             </Callout>
           </Marker>
           <Marker coordinate={{
-            //region instead of nearby
             latitude: currentLat,
             longitude: currentLng
           }}>
@@ -364,17 +353,14 @@ const MapScreen = () => {
           </Marker>
         </MapView>
       </View>
-
           <View style={styles.favoritedTextBar}>
             <Text style={styles.favoritedText}> 
-            
             {nearby.name} 
-        
             </Text>
             <FontAwesome 
               name={favClicked ? "star" : "star-o"}
               size={24}
-              color={favClicked ? "#FFD233" : "black"}
+              color={favClicked ? "#FFD233" : "white"}
               onPress={() => {
                 setFavClicked(!favClicked);
                 buildFavArray(nearby.name, !favClicked);
@@ -382,7 +368,6 @@ const MapScreen = () => {
               }}
             />
           </View>
-
       </View>
     );
   };
@@ -397,28 +382,34 @@ const MapScreen = () => {
     },
     map: {
       ...StyleSheet.absoluteFillObject,
-      height: 725,
+      height: Dimensions.get("window").height * .82,
       //width: Dimensions.get("window").width,
       //height: Dimensions.get("window").height
     },
     bubble: {
     flexDirection: "row",
-    alignSelf: 'flex-start',
-    backgroundColor: "#fff",
+    alignSelf: 'align-self',
+    backgroundColor: "#356C81",
     borderRadius: 6,
-    borderColor: "#ccc",
+    borderColor: "#356C81",
     borderWidth: 0.5,
     padding: 5,
     width: 300, 
     },
     name: {
-      fontSize: 15,
-      marginBottom: 5
+      fontSize: 20,
+      marginBottom: 5,
+      textAlign: 'center',
+      ontWeight: 'bold',
+      alignSelf: 'flex-start',
+      position: 'relative',
+      paddingLeft: 10,
+      color: "white"
     },
     arrow: {
       backgroundColor: 'transparent',
       borderColor: 'transparent',
-      borderTopColor: '#fff',
+      borderTopColor: '#356C81',
       borderWidth: 16,
       alignSelf: 'center',
       marginTop: -32,
@@ -441,16 +432,27 @@ const MapScreen = () => {
     },
     favoritedText: {
       display: 'flex',
+      fontWeight: 'bold',
+      color: "white",
+      paddingRight: 15,
+      fontSize: 20,
     },
     favoritedTextBar: {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       marginTop: 750,
+      backgroundColor: "#084254",
+      //height: Dimensions.get("window").height,
+      overflow : "hidden",
+      paddingVertical: 30,
     },
-    favoriteButton: {
-      marginLeft: 5,
+    gradient:{
+      flex: 1,
+      backgroundColor: '#0a2d39',
+      alignItems: 'center',
+      justifyContent: 'center',
     }
-  });
+  })
 
 export default MapScreen;
