@@ -15,5 +15,5 @@ npm install
 npx expo start --tunnel
 ```
 
-If you on a Mac, you can press 'i' on your keyboard to open an interactive iOS app view. Otherwise, you need to download Expo Go from the app store and scan the QR code to view the app on your phone.
+If you are on a Mac, you can press 'i' on your keyboard to open an interactive iOS app view. Otherwise, you need to download Expo Go from the app store and scan the QR code to view the app on your phone.
 
