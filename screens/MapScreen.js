@@ -442,7 +442,6 @@ const MapScreen = () => {
       flexDirection: 'row',
       marginTop: 750,
       backgroundColor: "#084254",
-      //height: Dimensions.get("window").height,
       overflow : "hidden",
       paddingVertical: 30,
     },
