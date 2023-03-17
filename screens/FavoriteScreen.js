@@ -87,9 +87,10 @@ const FavoriteScreen = ({ navigation }) => {
       >
         <Text style={{
           color: "white",
-          fontSize: 22,
+          fontSize: 18,
+          marginRight: 90,
+          overflow: 'scroll'
         }}
-        multiline={true}
         >
           {favorites[i].name}
         </Text>
