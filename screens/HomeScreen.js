@@ -11,8 +11,9 @@ import { buildUnavailableHoursBlocks } from 'react-native-calendars/src/timeline
 const Item = ({ hilo, date, height }) => {
 
   // Converting date from military to AM/PM
-  let time = date.slice(-5);
-  let [hours, minutes] = time.split(':').map(Number);
+  const time = date.slice(-5);
+  const [hours, minutes] = time.split(':');
+  const hoursNumeric = Number(hours);
   let timeValue;
   if (hours == 0) {
     timeValue = `12:${minutes} AM`; 
@@ -21,11 +22,9 @@ const Item = ({ hilo, date, height }) => {
   } else if (hours == 12) {
     timeValue = `${hours}:${minutes} PM`;
   } else {
-    timeValue = `${hours - 12}:${minutes} PM`;
+    timeValue = `${hoursNumeric - 12}:${minutes} PM`;
   }
-    // const hour = parseInt(date.slice(-5));
-    // const time = hour >= 12 ? 'PM' : 'AM';
- 
+
   return (
     <View style={styles.item}>
       <Text style={{ color: 'white', fontSize: 20, flexGrow: 1, textAlign: 'center', fontWeight: 'bold' }}>{(hilo == 'H') ? 'HIGH' : 'LOW'}</Text>
@@ -145,10 +144,10 @@ const HomeScreen = ({ navigation }) => {
   return (
 
     //<View style={styles.container}>
-      <LinearGradient
+    <LinearGradient
       style={styles.container}
       colors={['rgba(0,0,0,0.6)', 'transparent']}
-      >
+    >
       <StatusBar style="light" />
       <Pressable onPress={() => setModalVisible(true)}>
         <View style={{
@@ -226,8 +225,8 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
 
-  </LinearGradient>
-   
+    </LinearGradient>
+
   );
 }
 

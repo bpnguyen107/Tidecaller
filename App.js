@@ -10,9 +10,8 @@ import LoginScreen from './screens/LoginScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ForumScreen from './screens/ForumScreen';
-import ForumScreen2 from './screens/ForumScreen2';
-import ForumScreen3 from './screens/ForumScreen3';
-import { Feather } from '@expo/vector-icons'; 
+import Post from './screens/Post';
+import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, Eczar_400Regular } from '@expo-google-fonts/eczar';
 import { app, auth } from "./backend/firebaseConfig";
@@ -31,8 +30,8 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
-  
-    
+
+
         label="Tidecaller"
         onPress={() => console.log("Pressed header")}
         labelStyle={{ color: '#F6DD7D', fontSize: 42, textAlign: 'center', fontFamily: 'Eczar_400Regular' }}
@@ -51,14 +50,14 @@ export default function App() {
   const auth = getAuth(app);
 
   //navigate to forum create page if user is logged in
-//else navigate to login page
+  //else navigate to login page
   const navigationRef = useNavigationContainerRef();
 
   function addDiscussionPost() {
-    if(auth.currentUser != null) {
-      navigationRef.navigate("Forums2")
+    if (auth.currentUser != null) {
+      navigationRef.navigate("Post")
     }
-    else{
+    else {
       navigationRef.navigate("Login")
     }
   }
@@ -135,7 +134,7 @@ export default function App() {
             )
           }}
         />
-        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Forums2" component={ForumScreen2} />
+        <Drawer.Screen options={{ drawerItemStyle: { height: 0 } }} name="Post" component={Post} />
         <Drawer.Screen name="Forums" component={ForumScreen}
           options={{
             drawerIcon: ({ size }) => (
@@ -145,17 +144,17 @@ export default function App() {
                 size={size}
               />
             ),
-            headerRight: ({size}) => (
+            headerRight: ({ size }) => (
               <Pressable onPress={() => (addDiscussionPost())}>
-              <Feather
-                name="plus"
-                color="white"
-                size= {25}
-                style={{
-                  paddingRight: 15,
-                  paddingLeft: 25
-                }}
-              />
+                <Feather
+                  name="plus"
+                  color="white"
+                  size={25}
+                  style={{
+                    paddingRight: 15,
+                    paddingLeft: 25
+                  }}
+                />
               </Pressable>)
           }}
         />
