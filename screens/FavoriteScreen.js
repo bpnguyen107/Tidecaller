@@ -6,16 +6,14 @@ import { auth, app } from '../backend/firebaseConfig';
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-
+import { MaterialIcons } from '@expo/vector-icons';
 
 const db = getFirestore(app);
 
-const FavoriteScreen = () => {
-
+const FavoriteScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [clicked, setClicked] = useState(new Map());
   const [userId, setUserId] = useState("bruh");
-
   const navigate = useNavigation();
 
   //finds the userId
@@ -33,130 +31,133 @@ const FavoriteScreen = () => {
 
       if (favoriteSnap.exists()) {
         console.log("Favorite Data: ", favoriteSnap.data().favoriteSpots);
-        var favoriteObjects = [...favoriteSnap.data().favoriteSpots];
-        var favoriteNames = [];
-        for (let i = 0; i < favoriteObjects.length; i++){
-          favoriteNames.push(favoriteObjects[i].name);
-        }
-        setFavorites(favoriteNames);
+        setFavorites(favoriteSnap.data().favoriteSpots);
       }
       else {
         console.log("No Favorite Data")
       }
     }
     getFavoriteData();
-  }, [userId]) 
+  }, [userId])
 
-	useEffect(()=>{
+  useEffect(() => {
     var clickedTemp = new Map();
     console.log("favorites length:", favorites.length)
-    for (let i = 0; i < favorites.length; i++){
+    for (let i = 0; i < favorites.length; i++) {
       clickedTemp.set(i, true);
     }
     setClicked(clickedTemp);
-	}, [favorites])
-    
+  }, [favorites])
+
 
   //pass in parameters
-  async function updateFavorites(name) {
+  async function updateFavorites(name, id) {
     await updateDoc(favoriteRef, {
-      favoriteSpots: arrayUnion({"name": name})
+      favoriteSpots: arrayUnion({ "name": name, "id": id })
     }).then(console.log("favorite update success"))
   }
 
   //pass in paramters
   async function removeFavorites(name) {
-    await updateDoc(favoriteRef, { 
-      favoriteSpots: arrayRemove({"name": name})
+    await updateDoc(favoriteRef, {
+      favoriteSpots: arrayRemove({ "name": name, "id": id })
     }).then(console.log("favorite remove success"))
   }
-  
+
   var printFavs = [];
 
-  for (let i = 0; i < favorites.length; i++){
+  for (let i = 0; i < favorites.length; i++) {
     // console.log(favorites[i]);
     printFavs.push(
-    <View 
-      key={i}
-      style={{
-        backgroundColor: '#084254',
-        borderRadius: 10,
-        marginVertical: 8,
-        marginLeft: 5,
-        marginRight: 5,
-        flexDirection: "row",
-        padding: 20,
-        alignItems: "center",
-        height: 80
-      }}
-    >
-      <Text style={{
-        color: "white",
-        fontSize: 22,
-      }}
-      >
-        { favorites[i] }
-      </Text>
-      <FontAwesome
+      <View
+        key={i}
         style={{
-          positon: "absolute",
-          marginLeft: "auto"
-        }} 
-        name={clicked.get(i)===true ? "star" : "star-o"}
-        size={30}
-        color={clicked.get(i)===true ? "#FFD233" : "white"}
-        onPress={() => {
-          var clickedTemp = new Map([...clicked]);
-          if (clickedTemp.get(i) === true){
-            clickedTemp.set(i, false);
-            removeFavorites(favorites[i]);
-          }
-          else {
-            clickedTemp.set(i, true);
-            updateFavorites(favorites[i]);
-          }
-          setClicked(clickedTemp);
+          backgroundColor: '#084254',
+          borderRadius: 10,
+          marginVertical: 8,
+          marginLeft: 5,
+          marginRight: 5,
+          flexDirection: "row",
+          padding: 20,
+          alignItems: "center",
+          height: 80
         }}
-      />
-    </View>
+      >
+        <Text style={{
+          color: "white",
+          fontSize: 22,
+        }}
+        >
+          {favorites[i].name}
+        </Text>
+        <FontAwesome
+          style={{
+            positon: "absolute",
+            marginLeft: "auto"
+          }}
+          name={clicked.get(i) === true ? "star" : "star-o"}
+          size={30}
+          color={clicked.get(i) === true ? "#FFD233" : "white"}
+          onPress={() => {
+            var clickedTemp = new Map([...clicked]);
+            if (clickedTemp.get(i) === true) {
+              clickedTemp.set(i, false);
+              removeFavorites(favorites[i].name, favorites[i].id);
+            }
+            else {
+              clickedTemp.set(i, true);
+              updateFavorites(favorites[i].name, favorites[i].id);
+            }
+            setClicked(clickedTemp);
+          }}
+        />
+        <MaterialIcons
+          name="waves"
+          size={24}
+          color="white"
+          onPress={() => {
+            navigation.jumpTo('Home', { stationID: favorites[i].id, stationName: favorites[i].name })
+          }}
+        />
+      </View>
     );
   }
 
   return (
-  <LinearGradient
-    style={styles.container}
-    colors={['rgba(0,0,0,0.6)', 'transparent']}
-  >
-    <View style={{marginTop: 10}}>
-      {userId == "bruh" &&
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => {navigate.navigate("Login")}}
-        >
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 20,
-              marginBottom: 20,
-              align: 'center'
-            }}
+    <LinearGradient
+      style={styles.container}
+      colors={['rgba(0,0,0,0.6)', 'transparent']}
+    >
+      <View style={{ marginTop: 10 }}>
+        {userId == "bruh" &&
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => { navigate.navigate("Login") }}
           >
-            You Must Be Logged in to See Favorites
-          </Text>
-          <Text 
-            style={styles.buttonText}
-          >
-            Go to Login Screen
-          </Text>
-        </TouchableOpacity>
-      }
-      {userId != "bruh" &&
-        <View>
-          { printFavs }
-        </View>
-      }
-    </View>
-  </LinearGradient>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 20,
+                marginBottom: 20,
+                align: 'center'
+              }}
+            >
+              You Must Be Logged in to See Favorites
+            </Text>
+            <Text
+              style={styles.buttonText}
+            >
+              Go to Login Screen
+            </Text>
+          </TouchableOpacity>
+        }
+        {userId != "bruh" &&
+          <View>
+            {printFavs}
+          </View>
+        }
+      </View>
+    </LinearGradient>
   )
 }
 

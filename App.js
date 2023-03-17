@@ -30,8 +30,6 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
-
-
         label="Tidecaller"
         onPress={() => console.log("Pressed header")}
         labelStyle={{ color: '#F6DD7D', fontSize: 42, textAlign: 'center', fontFamily: 'Eczar_400Regular' }}
@@ -98,7 +96,8 @@ export default function App() {
         <Drawer.Screen name="Home"
           component={HomeScreen}
           initialParams={{
-            station: '9410840'
+            stationID: null,
+            stationName: 'Finding Closest Tide Station...',
           }}
           options={{
             drawerIcon: ({ size }) => (
@@ -109,7 +108,7 @@ export default function App() {
               />
             ),
             headerTitleStyle: {
-              fontSize: 14
+              fontSize: 18
             },
             drawerLabel: "Home",
           }}

@@ -65,7 +65,7 @@ const HomeScreen = ({ route, navigation }) => {
   const [location, setLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(today.toISOString().substring(0, 10));
-  const { station } = route.params;
+  const { stationID, stationName } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -80,8 +80,10 @@ const HomeScreen = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
-    if (location == null)
+    if (location == null || stationID)
       return;
+
+    console.log("got location, finding closest");
 
     (async () => {
       const response = await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions&units=english');
@@ -105,17 +107,23 @@ const HomeScreen = ({ route, navigation }) => {
       console.log("Station Name:", closest.name);
 
       navigation.setParams({
-        station: closest.id,
+        stationID: closest.id,
+        stationName: closest.name
       });
-      navigation.setOptions({ title: `${closest.name} Tide Chart` });
     })();
   }, [location])
+
+  useEffect(() => {
+    navigation.setOptions({ title: `${stationName}` });
+  }, [stationName])
 
   useEffect(() => {
     const selectedDate = new Date(selectedDay)
     const ISOdate = selectedDate.toISOString().substring(0, 10);
     const queryDate = ISOdate.split("-").join("");
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${queryDate}&end_date=${queryDate}&datum=MLLW&station=${station}&time_zone=lst_ldt&units=english&interval=hilo&format=json`
+    console.log("Station ID:", stationID);
+    console.log("Station Name:", stationName);
+    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date=${queryDate}&end_date=${queryDate}&datum=MLLW&station=${stationID}&time_zone=lst_ldt&units=english&interval=hilo&format=json`
 
     fetch(url)
       .then((res) => res.json())
@@ -126,7 +134,7 @@ const HomeScreen = ({ route, navigation }) => {
       .catch((err) => {
         console.log(err.message);
       })
-  }, [selectedDay, station])
+  }, [selectedDay, stationID])
 
   const marked = useMemo(() => {
     return {
