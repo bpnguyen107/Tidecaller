@@ -85,39 +85,7 @@ const ProfileScreen = ({ navigation }) => {
       })
       
     }, [userProfile])
-
-    /*
-    const uploadUserProfile = async () => {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.1,
-      });
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      } 
-
-      const img = await fetch(image);
-      const ImageRef = ref(getStorage(), `user/${auth.currentUser.uid}.img`);
-      const bytes = await img.blob();
-
-      const imageUpload = await uploadBytesResumable(ImageRef, bytes)
-      .then(
-        async () => {
-          console.log("User Profile UpLoad Finish")
-          const reference = ref(getStorage(), `user/${auth.currentUser.uid}.img`)
-          await getDownloadURL(reference).then((x) => {
-            setUserUrl(x);
-            console.log("Image Url: ", x)
-          })
-      }).catch((error) => {
-          console.log(error.message)
-      })
-    }
-    */
+    
 
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library

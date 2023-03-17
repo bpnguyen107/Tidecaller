@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../backend/firebaseConfig";
@@ -143,8 +143,6 @@ export default function Post(navigation) {
     }
     uploadImage();
 
-    //setUploadTime(getDate());
-    //setUserName(auth.currentUser?.displayName);
     if (auth.currentUser?.displayName != null) {
       setUserName(auth.currentUser.displayName)
       setUserProfilePic(auth.currentUser.photoURL)

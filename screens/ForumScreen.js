@@ -9,7 +9,6 @@ import {
   Text, Image,
   TouchableOpacity,
   View,
-  Button
 } from 'react-native';
 import { getFirestore, onSnapshot, orderBy, collection, query }
   from 'firebase/firestore';

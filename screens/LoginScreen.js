@@ -1,21 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, SafeAreaView} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { signInWithEmailAndPassword, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 import { auth } from '../backend/firebaseConfig';
-import { app } from "../backend/firebaseConfig";
 
-function signOutUser() {
-  signOut(auth).then(() => {
-    console.log("Sign-out successful");
-  }).catch((error) => {
-    console.log("Error Code: ", error.code)
-    console.log("Error Message: ", error.message);
-  });
-}
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -25,20 +16,6 @@ const LoginScreen = ({ navigation }) => {
 
   const navigate = useNavigation();
 
-/*
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigate.navigate("Profile")
-      }
-      else {
-        signOutUser();
-      }
-    },)
-
-    return unsubscribe;
-  }, []);
-*/
 
   function registerUser() {
     navigate.navigate("Sign Up");

@@ -92,7 +92,6 @@ const SignUpScreen = ({ navigation }) => {
     };
 
     useEffect( () => {
-      //navigate.navigate("Profile")
 
       async function createUserInFirestore(){
         const firestore = getFirestore();
