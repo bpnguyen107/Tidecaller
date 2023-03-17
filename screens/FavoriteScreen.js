@@ -58,7 +58,7 @@ const FavoriteScreen = ({ navigation }) => {
   }
 
   //pass in paramters
-  async function removeFavorites(name) {
+  async function removeFavorites(name, id) {
     await updateDoc(favoriteRef, {
       favoriteSpots: arrayRemove({ "name": name, "id": id })
     }).then(console.log("favorite remove success"))
@@ -78,6 +78,7 @@ const FavoriteScreen = ({ navigation }) => {
           marginLeft: 5,
           marginRight: 5,
           flexDirection: "row",
+          justifyContent: 'space-between',
           padding: 20,
           alignItems: "center",
           height: 80
@@ -91,10 +92,6 @@ const FavoriteScreen = ({ navigation }) => {
           {favorites[i].name}
         </Text>
         <FontAwesome
-          style={{
-            positon: "absolute",
-            marginLeft: "auto"
-          }}
           name={clicked.get(i) === true ? "star" : "star-o"}
           size={30}
           color={clicked.get(i) === true ? "#FFD233" : "white"}
