@@ -92,6 +92,10 @@ const FavoriteScreen = ({ navigation }) => {
           {favorites[i].name}
         </Text>
         <FontAwesome
+          style={{
+            marginLeft: 'auto',
+            marginRight: 15
+          }}
           name={clicked.get(i) === true ? "star" : "star-o"}
           size={30}
           color={clicked.get(i) === true ? "#FFD233" : "white"}
