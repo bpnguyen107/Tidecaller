@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity, View, Image} from 'react-native';
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity, View, Image, Button} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -159,56 +159,47 @@ const ProfileScreen = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#081319'}}> 
-    <LinearGradient
-      style={styles.container}
-      colors={["#084254", "#081319"]}
-    >
 
-      <TouchableOpacity onPress={pickImage}>
-      <Image source={{ uri: auth.currentUser.photoURL, cache: 'default'}} style={{ width: 200, height: 200 }} />
+    <LinearGradient
+      style={{flex:1, justifyContent: 'center'}}
+      colors={["#436496", "#7CBCBF"]}
+    >
+      <TouchableOpacity 
+      onPress={pickImage}
+      >
+      <Image 
+      source={{ uri: auth.currentUser.photoURL, cache: 'default'}} 
+      style={{ width: 250, height: 250, borderRadius: 150, marginBottom: 25, alignSelf: 'center', marginTop: 95, borderWidth:6, borderColor:'#0A1424'}} />
       </TouchableOpacity>
- 
-      <Text style={{fontSize:30, fontWeight:'500', color:'#F9FFFF', marginBottom:10}}>
+  
+      <Text style={{fontSize:30, fontWeight:'600', color:'#0A1424', marginBottom:6, alignSelf: 'center'}}>
         Hello {userName}!
        </Text>
 
-      <Text style={{fontSize:15, fontWeight:'400', color:'#C4C8C8', marginBottom: 100}}>
+      <Text style={{fontSize:15, fontWeight:'400', color:'#0A1424', marginBottom: 100, alignSelf: 'center'}}>
         {auth.currentUser.email}
       </Text>
-      
-      <TouchableOpacity 
-        styles={styles.signoutTouch} 
-        onPress={() => signOutUser()}>
-           <Text styles={{fontSize:20, color:'#C4C8C8'}} >
-             Sign Out
-           </Text>
-      </TouchableOpacity>
-            
-        </LinearGradient>
-    </SafeAreaView>
+      <Button
+        
+        onPress={signOutUser}
+        title="Sign Out"
+        color="#0A1424"/>
+   
+    </LinearGradient>
+ 
   );
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+ 
+  signoutTouch: {
+    backgroundColor: '#204B5F',
+    width: '60%',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
   }, 
-  // signoutTouch: {
-  //   backgroundColor: '#204B5F',
-  //   width: '60%',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   marginTop: 40,
-  // }, 
-  // signoutButton: {
-  //   backgroundColor: '#fff',
-  //   color: 'white',
-  // }
 
 });
 
