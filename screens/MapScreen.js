@@ -220,7 +220,6 @@ const MapScreen = () => {
     //user stuff
     const [userId, setUserId] = useState("bruh");
     const [favoriteData, setFavoriteData] = useState([]);
-    const favoriteRef = doc(firestore, "user", userId)
 
     //finds the userId
     useEffect(() => {
@@ -233,8 +232,9 @@ const MapScreen = () => {
     }, [])
 
     //get the user's favorite data
-    
+    const favoriteRef = doc(firestore, "user", userId)
     useEffect(() => {
+      
       async function getFavoriteData () {
         const favoriteSnap = await getDoc(favoriteRef);
 
@@ -252,38 +252,29 @@ const MapScreen = () => {
     
     useEffect(() => {
       
+      let favoriteList2 = [];
+
       for (let i = 0; i < favoriteData.length; i++) {
-        if (!favList.includes(favoriteData[i].name)){
-          favList.push(favoriteData[i].name)
+        if (!favoriteList2.includes(favoriteData[i].name)){
+          favoriteList2.push(favoriteData[i].name)
         }
       }
       
+      favList = favoriteList2;
     }, [favoriteData])
 
-    async function updateUserFavorites(placeName, addOrDelete){
+    async function updateUserFavorites(placeName, addOrDelete){       
       if(addOrDelete){
-        await updateDoc(favoriteRef, {
-          favoriteSpots: arrayUnion({"name": placeName})
-         }).then(console.log("favorite update success"))
-      }
-      else{
-        await updateDoc(favoriteRef, { 
-          favoriteSpots: arrayRemove({"name": placeName})
-        }).then(console.log("favorite remove success"))
-      }
+        await updateDoc(favoriteRef, {           
+          favoriteSpots: arrayUnion({"name": placeName})          
+        }).then(console.log("favorite update success"))       
+      }       
+      else{         
+        await updateDoc(favoriteRef, {            
+          favoriteSpots: arrayRemove({"name": placeName})         
+        }).then(console.log("favorite remove success"))       
+      }     
     }
-
-
-
-
-
-    /*
-    <TouchableOpacity onPress={() => {console.log(bruh())}}>
-        <Text style={{fontSize:40}}>
-          Bruh
-        </Text>
-      </TouchableOpacity>
-    */
 
     return (
     <View>

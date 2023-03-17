@@ -95,7 +95,11 @@ export default function App() {
           drawerActiveBackgroundColor: '#102c3c',
         }}
       >
-        <Drawer.Screen name="Home" component={HomeScreen}
+        <Drawer.Screen name="Home"
+          component={HomeScreen}
+          initialParams={{
+            station: '9410840'
+          }}
           options={{
             drawerIcon: ({ size }) => (
               <FontAwesome
@@ -112,7 +116,7 @@ export default function App() {
         />
         <Drawer.Screen name="Favorites" component={FavoriteScreen}
           options={{
-            unmountOnBlur:true,
+            unmountOnBlur: true,
             drawerIcon: ({ size }) => (
               <FontAwesome
                 name="star-o"
@@ -124,7 +128,7 @@ export default function App() {
         />
         <Drawer.Screen name="Map" component={MapScreen}
           options={{
-            unmountOnBlur:true,
+            unmountOnBlur: true,
             drawerIcon: ({ size }) => (
               <FontAwesome
                 name="map-o"

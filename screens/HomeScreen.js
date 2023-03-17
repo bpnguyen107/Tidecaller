@@ -5,8 +5,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
-import { buildUnavailableHoursBlocks } from 'react-native-calendars/src/timeline/Packer';
-
 
 const Item = ({ hilo, date, height }) => {
 
@@ -15,11 +13,11 @@ const Item = ({ hilo, date, height }) => {
   const [hours, minutes] = time.split(':');
   const hoursNumeric = Number(hours);
   let timeValue;
-  if (hours == 0) {
-    timeValue = `12:${minutes} AM`; 
-  } else if (hours >= 0 && hours < 12) {
-    timeValue = `${hours}:${minutes} AM`;
-  } else if (hours == 12) {
+  if (hoursNumeric == 0) {
+    timeValue = `12:${minutes} AM`;
+  } else if (hoursNumeric >= 0 && hoursNumeric < 12) {
+    timeValue = `${hoursNumeric}:${minutes} AM`;
+  } else if (hoursNumeric == 12) {
     timeValue = `${hours}:${minutes} PM`;
   } else {
     timeValue = `${hoursNumeric - 12}:${minutes} PM`;
@@ -62,12 +60,12 @@ export function distance(lat1, lng1, lat2, lng2) {
 const today = new Date();
 today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
   const [tides, setTides] = useState([]);
   const [location, setLocation] = useState(null);
-  const [station, setStation] = useState("1612480");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(today.toISOString().substring(0, 10));
+  const { station } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -106,8 +104,10 @@ const HomeScreen = ({ navigation }) => {
       console.log("Station ID:", closest.id);
       console.log("Station Name:", closest.name);
 
-      setStation(closest.id);
-      navigation.setOptions({ title: `${closest.name} Tide Chart` })
+      navigation.setParams({
+        station: closest.id,
+      });
+      navigation.setOptions({ title: `${closest.name} Tide Chart` });
     })();
   }, [location])
 
