@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../backend/firebaseConfig";
@@ -83,6 +83,14 @@ export default function Post(navigation) {
 
 
   async function uploadMessages() {
+    if (image == null){
+      Alert.alert("Image is Empty")
+      return;
+    }
+    if (message == ""){
+      Alert.alert("Message is Empty")
+      return;
+    }
     const currentDate = Date.now()
     try {
       const messageData = collection(firestore, `discussionForum`)
