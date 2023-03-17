@@ -60,12 +60,12 @@ export function distance(lat1, lng1, lat2, lng2) {
 const today = new Date();
 today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
   const [tides, setTides] = useState([]);
   const [location, setLocation] = useState(null);
-  const [station, setStation] = useState("1612480");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(today.toISOString().substring(0, 10));
+  const { station } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -104,8 +104,10 @@ const HomeScreen = ({ navigation }) => {
       console.log("Station ID:", closest.id);
       console.log("Station Name:", closest.name);
 
-      setStation(closest.id);
-      navigation.setOptions({ title: `${closest.name} Tide Chart` })
+      navigation.setParams({
+        station: closest.id,
+      });
+      navigation.setOptions({ title: `${closest.name} Tide Chart` });
     })();
   }, [location])
 
