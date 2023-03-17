@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { Dimensions, Text, View, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
-
+import { LinearGradient } from 'expo-linear-gradient';
 import { auth, app } from '../backend/firebaseConfig';
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from '@firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+
 
 const db = getFirestore(app);
 
 const FavoriteScreen = () => {
 
   const [favorites, setFavorites] = useState([]);
-  const [favOriginal, setFavOriginal] = useState([]);
   const [clicked, setClicked] = useState(new Map());
-
   const [userId, setUserId] = useState("bruh");
-  const [favoriteData, setFavoriteData] = useState();
+
+  const navigate = useNavigation();
 
   //finds the userId
   useEffect(() => {
@@ -75,48 +76,111 @@ const FavoriteScreen = () => {
   for (let i = 0; i < favorites.length; i++){
     // console.log(favorites[i]);
     printFavs.push(
-    <View key={i}>
-      <Text>
+    <View 
+      key={i}
+      style={{
+        backgroundColor: '#084254',
+        borderRadius: 10,
+        marginVertical: 8,
+        marginLeft: 5,
+        marginRight: 5,
+        flexDirection: "row",
+        padding: 20,
+        alignItems: "center",
+        height: 80
+      }}
+    >
+      <Text style={{
+        color: "white",
+        fontSize: 22,
+      }}
+      >
         { favorites[i] }
-        <FontAwesome 
-          name={clicked.get(i)===true ? "star" : "star-o"}
-          size={24}
-          color={clicked.get(i)===true ? "#FFD233" : "black"}
-          onPress={() => {
-            var clickedTemp = new Map([...clicked]);
-            if (clickedTemp.get(i) === true){
-              clickedTemp.set(i, false);
-              removeFavorites(favorites[i]);
-            }
-            else {
-              clickedTemp.set(i, true);
-              updateFavorites(favorites[i]);
-            }
-            setClicked(clickedTemp);
-          }}
-        />
       </Text>
+      <FontAwesome
+        style={{
+          positon: "absolute",
+          marginLeft: "auto"
+        }} 
+        name={clicked.get(i)===true ? "star" : "star-o"}
+        size={30}
+        color={clicked.get(i)===true ? "#FFD233" : "white"}
+        onPress={() => {
+          var clickedTemp = new Map([...clicked]);
+          if (clickedTemp.get(i) === true){
+            clickedTemp.set(i, false);
+            removeFavorites(favorites[i]);
+          }
+          else {
+            clickedTemp.set(i, true);
+            updateFavorites(favorites[i]);
+          }
+          setClicked(clickedTemp);
+        }}
+      />
     </View>
     );
   }
 
   return (
-  
-  <View style={{ marginTop: 1, flex: 1 }}>
-    {userId == "bruh" &&
-      <TouchableOpacity onPress={() => editFavorites()}>
-          <Text style={{fontSize:40}}>
-            Go Login
+  <LinearGradient
+    style={styles.container}
+    colors={['rgba(0,0,0,0.6)', 'transparent']}
+  >
+    <View style={{marginTop: 10}}>
+      {userId == "bruh" &&
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => {navigate.navigate("Login")}}
+        >
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              marginBottom: 20,
+              align: 'center'
+            }}
+          >
+            You Must Be Logged in to See Favorites
           </Text>
-      </TouchableOpacity>
-    }
-    {userId != "bruh" &&
-      <View>
-        { printFavs }
-      </View>
-    }
-  </View>
+          <Text 
+            style={styles.buttonText}
+          >
+            Go to Login Screen
+          </Text>
+        </TouchableOpacity>
+      }
+      {userId != "bruh" &&
+        <View>
+          { printFavs }
+        </View>
+      }
+    </View>
+  </LinearGradient>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#084254',
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: Dimensions.get("window").height * 0.3
+  },
+  buttonText: {
+    backgroundColor: '#F6DD7D',
+    paddingHorizontal: 130,
+    padding: 8,
+    borderRadius: 20,
+    overflow: 'hidden',
+    color: '#204B5F',
+    fontWeight: '600',
+    fontSize: 16,
+    // marginTop: 15,
+    // marginBottom: 7,
+  },
+});
 
 export default FavoriteScreen;
