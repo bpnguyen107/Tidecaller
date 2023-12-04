@@ -1,4 +1,4 @@
-# Team Hello Kitty Flashlights - Tidecaller App
+TideCaller App
 # CS 35L - Discussion 1E
 
 ## Group Members
